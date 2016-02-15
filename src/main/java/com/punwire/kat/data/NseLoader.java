@@ -7,6 +7,7 @@ import com.punwire.kat.core.DateUtil;
 import com.punwire.kat.trade.OptionPosition;
 import com.punwire.kat.trade.Trade;
 import com.punwire.kat.zerodha.ZdOptionChain;
+import com.punwire.kat.zerodha.ZdOptionMapper;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -793,7 +794,7 @@ public class NseLoader {
                 System.out.println(currTimeString.replaceAll("As on ",""));
                 break;
             }
-
+            System.out.println("  +++++ underlinePrice ++++ " + underlinePrice);
             asOfDate = dt.toLocalDate();
             Element ocForm =  doc.select("#ocForm").get(0);
             Element dateSelect = ocForm.select("#date option[selected]").get(0);
@@ -828,6 +829,10 @@ public class NseLoader {
                 double ivPut = tds.get(18).text().equals("-")? 0.0 : Double.valueOf(tds.get(18).text().replaceAll(",", ""));
                 long vPut = tds.get(19).text().equals("-")? 0 : Long.valueOf(tds.get(19).text().replaceAll(",", ""));
                 long oicPut = tds.get(20).text().equals("-")? 0 : Long.valueOf(tds.get(20).text().replaceAll(",", ""));
+
+                if( ltpCall == 0 && ltpPut == 0 ) continue;
+
+
                 String oSymbol = underline + yyMMM.format(expiryDate).toUpperCase() + strikePriceFormatter.format(strike);
                 Option call = new Option(oSymbol+"CE",underline, underlinePrice, "CE",expiryDate,strike, ltpCall, changeCall, askPriceCall,askQtyCall,bidPriceCall,bidQtyCall, ivCall, oiCall, oicCall,vCall);
                 Option put = new Option(oSymbol+"PE",underline, underlinePrice, "PE",expiryDate,strike,ltpPut, changePut, askPricePut,askQtyPut ,bidPricePut,bidQtyPut, ivPut, oiPut, oicPut,vPut);
@@ -899,7 +904,7 @@ public class NseLoader {
     public static void main(String[] args){
 
         try {
-            NseLoader loader = new NseLoader();
+            //NseLoader loader = new NseLoader();
             //loader.downloadIndexFile(LocalDate.of(2016,2,12));
 //            LocalDate today = LocalDate.of(2016, 2, 12);
 //            int lastDate =  20160101;
@@ -915,7 +920,10 @@ public class NseLoader {
 //            }
 
             //loader.dailyRun();
-            loader.testDirect("RELIANCE");
+            //loader.testDirect("RELIANCE");
+            String sym = "NIFTY16FEB6850PE";
+            sym = sym.substring(0, (sym.length()-2));
+            System.out.println( ZdOptionMapper.onlyLastNum(sym));
 
             //db.getIvRank("RELIANCE", LocalDate.now());
 

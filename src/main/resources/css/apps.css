@@ -300,3 +300,19 @@ dl.bid-ask-size dd {
     text-transform: uppercase;
     vertical-align: middle;
 }
+
+.edit-in-place span {
+  cursor: pointer;
+}
+
+.edit-in-place input {
+  display: none;
+}
+
+.edit-in-place.active span {
+  display: none;
+}
+
+.edit-in-place.active input {
+  display: inline-block;
+}

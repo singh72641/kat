@@ -39,6 +39,7 @@ public class TradingSocket extends WebSocketAdapter {
     private static ObjectMapper mapper = new ObjectMapper();
     private static MongoDb db = new MongoDb();
     private Trade trade=null;
+    double underlinePrice=0.0;
 
     public void onWebSocketClose(int statusCode, String reason)
     {
@@ -72,13 +73,30 @@ public class TradingSocket extends WebSocketAdapter {
                 ObjectNode result = mapper.createObjectNode();
 
                 if( event.equals("oc")) {
+                    String symbol = msg.get("symbol").asText();
                     result = OptionClassAction.sendOptionChain(msg);
+
+                    ObjectNode optionData = (ObjectNode)result.get("data");
+                    underlinePrice = optionData.get("last").asDouble();
                     getRemote().sendStringByFuture(result.toString());
+
+                    //Fetch holdings
+                    trade = TradeAction.fetchTrade(symbol);
+                    if( trade != null ) {
+                        trade.underlinePrice = underlinePrice;
+                        result = TradeAction.sendTrade(trade);
+                        getRemote().sendStringByFuture(result.toString());
+                        // Send the Chart As well
+                        result = ChartAction.sendChart(trade);
+                        getRemote().sendStringByFuture(result.toString());
+                    }
+
                 }
                 else if( event.equals("NewTrade")) {
                     String tradeType = msg.get("tradeType").asText();
                     String symbol = msg.get("symbol").asText();
                     trade = new Trade(symbol, tradeType, LocalDate.now());
+                    trade.underlinePrice = underlinePrice;
                     result = TradeAction.sendTrade(trade);
                     getRemote().sendStringByFuture(result.toString());
                     System.out.println("Sending New Trade");
@@ -90,12 +108,31 @@ public class TradingSocket extends WebSocketAdapter {
 
                     //Send Chart As Well
                     result = ChartAction.sendChart(trade);
+                    System.out.println(result.toString());
                     getRemote().sendStringByFuture(result.toString());
                 }
                 else if( event.equals("reversePos")) {
                     result = TradeAction.reversePosition(msg,trade);
                     getRemote().sendStringByFuture(result.toString());
                     System.out.println("Reversed Position to trade");
+
+                    //Send Chart As Well
+                    result = ChartAction.sendChart(trade);
+                    getRemote().sendStringByFuture(result.toString());
+                }
+                else if( event.equals("updateQty")) {
+                    result = TradeAction.updateQty(msg, trade);
+                    getRemote().sendStringByFuture(result.toString());
+                    System.out.println("Updated Qty on trade");
+
+                    //Send Chart As Well
+                    result = ChartAction.sendChart(trade);
+                    getRemote().sendStringByFuture(result.toString());
+                }
+                else if( event.equals("updatePrice")) {
+                    result = TradeAction.updatePrice(msg,trade);
+                    getRemote().sendStringByFuture(result.toString());
+                    System.out.println("Updated Qty on trade");
 
                     //Send Chart As Well
                     result = ChartAction.sendChart(trade);

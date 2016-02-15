@@ -5,6 +5,7 @@
     <!-- <link rel="stylesheet" type="text/css" href="dough.css" media="all"> -->
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="all">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css/xeditable.css" media="all">
     <link rel="stylesheet" type="text/css" href="css/apps.css" media="all">
 </head>
 <body>
@@ -18,7 +19,7 @@
                     <div class="row" style="background-color: rgb(241,242,237); padding-top: 8px; padding-bottom: 4px;">
                         <div class="col-lg-3">
                             <input type="text" id="ember4071" class="symbol-search" placeholder="Symbol search"
-                                   autocomplete="off" ng-model="symbol" ng-enter="symbolSearch()">
+                                   autocomplete="off" ng-model="symbol" ng-enter="send({symbol: symbol, event: 'oc'})">
                         </div>
                         <div id="option-top" class="col-lg-3"
                              style="color: rgb(34,34,34); font-weight: 600; font-size: 1.0em; padding-top: 2px; padding-bottom: 2px;">
@@ -55,8 +56,7 @@
                           </dl>
                         </div>
                         <div class="col-lg-2" style="">
-                            <oa-progress size="40" stroke-width="8" complete="{{(optionData.ivrank)}}"
-                                         stroke="rgb(11,11,11)"></oa-progress>
+                            <oa-progress size="40" stroke-width="8" complete="optionData.ivrank" stroke="rgb(11,11,11)"></oa-progress>
                         </div>
                     </div>
                     <div class="row">
@@ -117,7 +117,7 @@
             <div class="col-lg-5" style="padding-top: 30px;">
                 <div class="row">
                     <div class="col-lg-12" style="height: 400px; padding-top: 10px; padding-left: 10px;">
-                        <am-chart id="lineChart" height="380px" options="amChartOptions"></am-chart>
+                        <am-chart id="lineChart" height="360px" options="amChartOptions"></am-chart>
                     </div>
                 </div>
                 <div class="row">
@@ -167,8 +167,12 @@
                                 <td class="oa-text-column">{{position.side}}</td>
                                 <td class="oa-text-column">{{position.opt_type}}</td>
                                 <td class="oa-numeric-column">{{position.strike}}</td>
-                                <td class="oa-numeric-column">{{position.qty}}</td>
-                                <td class="oa-numeric-column">{{position.price}}</td>
+                                <td class="oa-numeric-column">
+                                   <input size="6" name="qty" ng-model="position.qty" ng-enter="send({data: position,event: 'updateQty'})"/>
+                                </td>
+                                <td class="oa-numeric-column">
+                                  <input size="8" name="price" ng-model="position.price" ng-enter="send({data: position,event: 'updatePrice'})"/>
+                                </td>
                                 <td class="oa-numeric-column">{{position.delta}}</td>
                                 <td>
                                     <button class="btn-control" style="margin: 0 1px 0 0;" ng-click="sendEvent('reversePos',position)">
@@ -176,7 +180,7 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <button class="btn-control" style="margin: 0 1px 0 0;" ng-click="remvovePos(position. $index)">
+                                    <button class="btn-control" style="margin: 0 1px 0 0;" ng-click="remvovePos(position, $index)">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </button>
                                 </td>
@@ -193,6 +197,7 @@
 <script type="text/javascript" src="js/angular.js"></script>
 <!--<script type="text/javascript" src="ng-websocket.js"></script>-->
 <script type="text/javascript" src="js/angular-websocket.js"></script>
+<script type="text/javascript" src="js/xeditable.js"></script>
 <script type="text/javascript" src="js/apps.js"></script>
 // amChartsDirective
 <script type="text/javascript" src="js/amcharts.js"></script>

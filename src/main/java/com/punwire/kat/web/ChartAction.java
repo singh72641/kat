@@ -19,7 +19,7 @@ public class ChartAction {
 ////        System.out.println("Standard Deviation1: " + (currPrice1 + stdVal1));
 
         Bar bar = AppConfig.db.getEod(trade.symbol);
-        double currPrice = bar.getC();
+        double currPrice = trade.underlinePrice;
         double upperLimit = currPrice;
         double incr = 0.5;
         if( currPrice > 1000 ) incr = 1;

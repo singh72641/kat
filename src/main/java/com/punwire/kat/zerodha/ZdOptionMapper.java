@@ -20,4 +20,14 @@ public class ZdOptionMapper {
         }
         return val;
     }
+
+    public static String onlyLastNum(String val)
+    {
+        for(int c=(val.length()-1);c>=0;c--){
+            if( !(val.charAt(c) >= '0' && val.charAt(c) <= '9') ){
+                return val.substring(c+1);
+            }
+        }
+        return val;
+    }
 }

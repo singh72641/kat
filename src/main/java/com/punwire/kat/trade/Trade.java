@@ -25,6 +25,7 @@ public class Trade {
     Integer positionNum=0;
     String name;
     public final String symbol;
+    public double underlinePrice=0.0;
     LocalDate date;
     public double delta=9999.99;
     public Trade(String symbol, String name, LocalDate date)
@@ -74,6 +75,30 @@ public class Trade {
         }
     }
 
+    public void addPosition(String symbol, double strike, String optType, int lots, double price){
+        MongoDb db = AppConfig.db;
+        ZdOptionChain option = db.getOption(symbol, strike);
+        ZdSymbol lot = db.getLot(symbol);
+        if( optType.equals("CE")) {
+            OptionPosition ot1 = new OptionPosition(option.call, lot.lotSize * lots, price, LocalDate.now());
+            addPosition(ot1);
+        }else{
+            OptionPosition ot1 = new OptionPosition(option.put, lot.lotSize * lots, price, LocalDate.now());
+            addPosition(ot1);
+        }
+    }
+
+    public void addPositionQty(String symbol, double strike, String optType, int qty, double price){
+        MongoDb db = AppConfig.db;
+        ZdOptionChain option = db.getOption(symbol, strike);
+        if( optType.equals("CE")) {
+            OptionPosition ot1 = new OptionPosition(option.call, qty, price, LocalDate.now());
+            addPosition(ot1);
+        }else{
+            OptionPosition ot1 = new OptionPosition(option.put, qty, price, LocalDate.now());
+            addPosition(ot1);
+        }
+    }
 
     public void addPosition(OptionPosition position){
         Integer posId = positionNum++;
@@ -87,6 +112,19 @@ public class Trade {
         position.qty = -1 * position.qty;
         updateDelta();
     }
+
+    public void updateQty(Integer id, int qty){
+        OptionPosition position = positions.get(id);
+        position.qty = qty;
+        updateDelta();
+    }
+
+    public void updatePrice(Integer id, double price){
+        OptionPosition position = positions.get(id);
+        position.avgPrice= price;
+        updateDelta();
+    }
+
 
     public void removePosition(Integer id){
         System.out.println("Removing ID " + id);

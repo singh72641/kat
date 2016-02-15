@@ -126,7 +126,7 @@ public class MongoDb {
     public boolean optionDataExists(LocalDate date, String instrument, String symbol){
         MongoCollection col = database.getCollection(instrument.toLowerCase());
         Document d = new Document();
-        d.put("symbol",symbol);
+        d.put("symbol", symbol);
         d.put("date", DateUtil.intDate(date));
         long l = col.count(d);
         return l > 0;
@@ -521,7 +521,7 @@ public class MongoDb {
         Document d = new Document();
         d.put("name",name);
         d.put("symbol",symbol);
-        d.put("lot_size",lotSize);
+        d.put("lot_size", lotSize);
         col.insertOne(d);
     }
 
@@ -608,7 +608,7 @@ public class MongoDb {
         MongoCollection col = database.getCollection("DailyBar");
         //System.out.println("Collection:  " + bar.getSymbol().toLowerCase().replace("-", "_"));
         Document d = new Document();
-        d.put("symbol",symbol);
+        d.put("symbol", symbol);
         Document sort = new Document("date",-1);
 
         MongoCursor<Document> cursor = col.find(d).sort(sort).limit(1).iterator();
@@ -659,6 +659,31 @@ public class MongoDb {
     public void clearHolding() {
         MongoCollection c = database.getCollection("holdings");
         c.drop();
+    }
+
+    public List<ZdHolding> getHolding(String type, String symbol) {
+        MongoCollection col = database.getCollection("holdings");
+        List<ZdHolding> holdings = new ArrayList<>();
+
+        Document d = new Document();
+        d.put("type",type);
+        d.put("underline",symbol);
+
+        Document sort = new Document("symbol",1);
+
+        MongoCursor<Document> cursor = col.find(d).sort(sort).iterator();
+        try {
+            while(cursor.hasNext()) {
+                Document row = cursor.next();
+                ZdHolding holding = new ZdHolding(row.getString("symbol"),row.getString("underline"),row.getString("type"),
+                                        row.getInteger("qty"),row.getDouble("avg_price"),row.getDouble("curr_price"),
+                                        row.getDouble("currPnL"));
+                holdings.add(holding);
+            }
+        } finally {
+            cursor.close();
+        }
+        return holdings;
     }
 
     public void saveHoldings(List<ZdHolding> holdings) {

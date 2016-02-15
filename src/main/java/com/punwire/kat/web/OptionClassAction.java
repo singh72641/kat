@@ -42,10 +42,11 @@ public class OptionClassAction {
         double optStep=0;
         LocalDate expiryDate = LocalDate.now();
         LocalDate onDate = LocalDate.now();
-        System.out.println("CurrPrice to check ITM and OTM " + currPrice);
+
         for(ZdOptionChain option: options){
             //option.greeks(0.0735,option.asOfDate);
             ObjectNode on = option.toJson();
+            currPrice = option.underlinePrice;
             Double strike = on.get("strike").asDouble();
             if( prevStrike == 0 ) prevStrike = strike;
             else {
@@ -69,9 +70,12 @@ public class OptionClassAction {
 
 
             data.add( on );
+            currPrice = option.underlinePrice;
             expiryDate = option.expiryDate;
             onDate = option.asOfDate;
         }
+        System.out.println("CurrPrice to check ITM and OTM " + currPrice);
+
         ZdVolatility vol = AppConfig.db.getVol(symbol, onDate);
 
         double ivRank = 0.25;
@@ -93,8 +97,8 @@ public class OptionClassAction {
         optionData.put("O", bar.getO() );
         optionData.put("H", bar.getH() );
         optionData.put("L", bar.getL() );
-        optionData.put("C", bar.getC() );
-        optionData.put("last", bar.getLast() );
+        optionData.put("C", currPrice );
+        optionData.put("last", currPrice );
         optionData.put("prev", bar.getPrev() );
         double change = (bar.getLast() - bar.getPrev());
 
