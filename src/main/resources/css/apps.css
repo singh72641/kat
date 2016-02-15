@@ -1,0 +1,302 @@
+.option-spacer {
+    width: 20px;
+    #background-color: green;
+}
+
+.option-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.option-table tr {
+    border-bottom-color: rgb(171,171,171);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.option-col {
+    padding-left: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: right;
+    font-size: 1.2em;
+    color: rgb(100,100,100);
+}
+
+.option-put {
+
+}
+
+.option-table-header {
+    background-color: #d9e1e0;
+    height: 20px;
+    width: 100%;
+    font-weight: bolder;
+    padding-top: 10px;
+}
+
+.option-itm {
+    background-color: rgb(242,242,237);
+}
+
+.option-strike {
+    background-color: rgb(217,225,224);
+    text-align: center;
+}
+
+.option-table thead {
+    font-size: 1.3em;
+    text-align: right;
+    background-color: #d9e1e0;
+}
+
+.option-table th {
+    height: 20px;
+    vertical-align: middle;
+    text-align: right;
+}
+.option-table td {
+    height: 20px;
+    vertical-align: middle;
+    text-align: right;
+}
+
+
+
+.symbol-search {
+    line-height: 10px;
+    border: 1px solid;
+    font-size: 1.2em;
+    border-color: rgb(128,128,128);
+    margin-top: 4px;
+    margin-bottom: 4px;
+    height: 26px;
+}
+
+.option-catm {
+    border-color: red;
+    border-top: 1px solid red;
+}
+
+.option-patm {
+    border-color: red;
+    border-bottom: 1px solid red;
+
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    border: 0 none;
+    font: inherit;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+body {
+    line-height: 1;
+    background-color: #fff;
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+    margin: 0;
+    padding: 0;
+    background:url(../img/background_texture.png) center center;
+}
+
+.container{
+  width: 98%;
+}
+
+.oa-wrapper {
+    background-color: #fff;
+    box-shadow: 8px 8px 22px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+    margin: 0 auto;
+    margin-top: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.oa-numeric-column, .oa-strike-column, .oa-text-column {
+    box-sizing: border-box;
+    color: #646464;
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+    padding: 5px;
+}
+.oa-numeric-column  {
+    text-align: right;
+}
+
+.oa-text-column, .oa-header-text-column {
+  text-align: left;
+}
+
+.oa-strike-column {
+    background-color: #f2f2ed;
+    border-left: 1px solid #fff;
+    color: #000;
+    font-family: "Avenir Next Bold",arial,helvetica,verdana,sans-serif;
+    text-align: center;
+    z-index: 10;
+    font-weight: bold;
+}
+
+.oa-header-numeric-column, .oa-header-call-title-column, .oa-header-strike-column, .oa-header-put-title-column, .oa-header-text-column {
+    border-right: 1px dotted rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
+    cursor: default;
+    /*display: inline-block;*/
+    height: 17px;
+    padding: 4px 4px;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 82px;
+}
+
+.oa-header-numeric-column, .oa-header-call-title-column, .oa-header-strike-column, .oa-header-put-title-column, oa-header-text-column {
+    background-color: transparent;
+    border: medium none;
+    box-shadow: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+    line-height: 10px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.oa-at-the-money-put {
+    border-bottom: 1px solid #000;
+}
+
+.oa-at-the-money-call {
+    border-top: 1px solid #000;
+}
+
+.oa-in-the-money {
+    background-color: #f2f2ed;
+}
+
+
+.oa-header-row {
+    background-color: #3a556a;
+    border-right: 1px solid #fff;
+    box-sizing: border-box;
+    color: #f2f2f7;
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+    height: 20px;
+    padding: 3px 0;
+    position: relative;
+    text-align: right;
+    text-transform: uppercase;
+    width: 740px;
+}
+
+.oa-expiry-header {
+    background-color: #d9e1e0;
+    border-right: 1px solid #fff;
+    border-top: 1px solid #fff;
+    box-sizing: border-box;
+    color: #000;
+    cursor: default;
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    height: 20px;
+    line-height: 20px;
+    position: relative;
+}
+
+dl.bid-ask-size  {
+    display: inline-block;
+    height: 25px;
+    margin-bottom: 5px;
+    margin-left: 20px;
+    min-width: 55px;
+    vertical-align: 3px;
+}
+
+dl.bid-ask-size dt {
+    color: gray;
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+dl.bid-ask-size dd {
+    color: #444;
+    font-family: "Avenir Next Bold",arial,helvetica,verdana,sans-serif;
+    font-size: 14px;
+    margin-left: 0;
+}
+
+.symbol-search, .oa-select {
+    width: 148px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin: 0;
+    padding-right: 28px;
+    width: 125px;
+    border: 1px solid #bababa;
+    color: #444;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.25);
+    height: 20px;
+    padding: 0 2px;
+    font-size: 10px;
+}
+
+.oa-select {
+    font-size: 10px;
+}
+
+
+.oa-action-btn{
+  border: 1px solid #ababa9;
+  box-shadow: none;
+  cursor: pointer;
+  font-family: "Avenir Next Bold",arial,helvetica,verdana,sans-serif;
+  font-size: 10px;
+  font-weight: bold;
+  height: 24px;
+  width: 24px;
+  visibility: hidden;
+}
+
+.oa-hover-btn:hover .oa-action-btn {
+    visibility: visible;
+}
+
+.oa-action-btn-green{
+  background-color: #3CB371;
+}
+.oa-action-btn-red{
+  background-color: red;
+}
+.oa-action-btn-blue{
+  background-color: #4682B4;
+}
+
+.btn-control {
+    background-color: #aaa;
+    border-radius: 4px;
+    border-width: 0;
+    box-shadow: none;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+    height: 24px;
+    width: 24px;
+    letter-spacing: 0.05em;
+    margin: 0 10px 0 0;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+}

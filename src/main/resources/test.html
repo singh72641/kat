@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" media="all">
+    <!-- <link rel="stylesheet" href="css/dough.css" /> -->
+    <link rel="stylesheet" type="text/css" href="css/apps.css" media="all">
+
+</head>
+<body ng-app="oatest">
+    <div class="container oa-wrapper">
+      <div class="row">
+        <select name="tradeType" id="tradeType" ng-model="tradeType" class="oa-select">
+          <option value="Call Spread" selected>Call Spread</option>
+          <option value="Put Spread">Put Spread</option>
+          <option value="Short Put">Short Put</option>
+          <option value="Short Call">Short Call</option>
+        </select>
+        <button class="btn-control" ng-click="send({event:'NewTrade'})">
+          <span class="glyphicon glyphicon-hand-right"></span>
+        </button>
+      </div>
+        <div class="row">
+            <div class="col-lg-8" style="padding-top:50px;  ">
+              <div class="row" style="background-color: rgb(241,242,237); padding-top: 8px;">
+                  <div class="col-lg-3">
+                      <input type="text" id="ember4071" class="symbol-search" placeholder="Symbol search"
+                             autocomplete="off" ng-model="symbol" ng-enter="symbolSearch()">
+                  </div>
+
+                  <div id="option-top" class="col-lg-3 col-lg-offset-2"
+                       style="color: rgb(34,34,34); font-weight: 600; font-size: 1.5em; padding-top: 4px; padding-bottom: 2px;">
+                      RELIANCE
+                  </div>
+                  <div class="col-lg-2 col-lg-offset-2"
+                       style="color: rgb(34,34,34); font-weight: 600; font-size: 1.5em; padding-top: 4px; padding-bottom: 2px;">
+                      {{optionData.printdate}}
+                  </div>
+              </div>
+
+                <div>
+                  <dl class="bid-ask-size">
+                  	<dt>Today's Low/High</dt>
+                  	<dd class="bid">93.01/94.50</dd>
+                  </dl>
+                </div>
+                <table >
+                                <thead>
+                                <tr class="oa-header-row">
+                                    <th class="oa-header-numeric-column">Delta</th>
+                                    <th class="oa-header-numeric-column">OI</th>
+                                    <th class="oa-header-numeric-column">OI Change</th>
+                                    <th class="oa-header-numeric-column">IV</th>
+                                    <th class="oa-header-numeric-column">Last Price</th>
+                                    <th class="">
+                                    </th>
+                                    <th class="oa-header-strike-column">Strike</th>
+                                    <th class="">
+                                    </th>
+                                    <th class="oa-header-numeric-column">Last Price</th>
+                                    <th class="oa-header-numeric-column">IV</th>
+                                    <th class="oa-header-numeric-column">OI Change</th>
+                                    <th class="oa-header-numeric-column">OI</th>
+                                    <th class="oa-header-numeric-column">Delta</th>
+                                </tr>
+                                <tr class="oa-expiry-header">
+                                    <th class="oa-header-numeric-column" colspan="5">February 28, 2016</th>
+                                    <th class=""></th>
+                                    <th class="oa-header-strike-column">13d</th>
+                                    <th class=""></th>
+                                    <th class="oa-header-numeric-column" colspan="5">Implied Vol: 35.46%</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                  <tr class="oa-hover-btn">
+                                    <td class="oa-numeric-column">-55.71</td>
+                                    <td class="oa-numeric-column">                                        0                                    </td>
+                                    <td class="oa-numeric-column">                                        0                                    </td>
+                                    <td class="oa-numeric-column">                                        0                                    </td>
+                                    <td class="oa-numeric-column">                                        0                                    </td>
+                                    <td>
+                                      <button class="oa-action-btn oa-action-btn-blue" ng-click="addPos()">+</button>
+                                    </td>
+                                    <td class="oa-strike-column">760</td>
+                                    <td>
+                                      <button class="oa-action-btn oa-action-btn-blue">+</button>
+                                    </td>
+                                    <td class="oa-numeric-column">                                        1.1                                    </td>
+                                    <td class="oa-numeric-column">                                        51.84                                    </td>
+                                    <td class="oa-numeric-column">                                        2500                                    </td>
+                                    <td class="oa-numeric-column">                                        2500                                    </td>
+                                    <td class="oa-numeric-column">                                        -0.03                                    </td>
+                                </tr>
+                                <tr>
+                                  <td class="oa-numeric-column">-55.71</td>
+                                  <td class="oa-numeric-column">                                        0                                    </td>
+                                  <td class="oa-numeric-column">                                        0                                    </td>
+                                  <td class="oa-numeric-column">                                        0                                    </td>
+                                  <td class="oa-numeric-column">                                        0                                    </td>
+                                  <td></td>
+                                  <td class="oa-strike-column">760</td>
+                                  <td></td>
+                                  <td class="oa-numeric-column">                                        1.1                                    </td>
+                                  <td class="oa-numeric-column">                                        51.84                                    </td>
+                                  <td class="oa-numeric-column">                                        2500                                    </td>
+                                  <td class="oa-numeric-column">                                        2500                                    </td>
+                                  <td class="oa-numeric-column">                                        -0.03                                    </td>
+                              </tr>
+                              <tr>
+                                <td class="oa-numeric-column">-55.71</td>
+                                <td class="oa-numeric-column">                                        0                                    </td>
+                                <td class="oa-numeric-column">                                        0                                    </td>
+                                <td class="oa-numeric-column">                                        0                                    </td>
+                                <td class="oa-numeric-column">                                        0                                    </td>
+                                <td></td>
+                                <td class="oa-strike-column">760</td>
+                                <td></td>
+                                <td class="oa-numeric-column">                                        1.1                                    </td>
+                                <td class="oa-numeric-column">                                        51.84                                    </td>
+                                <td class="oa-numeric-column">                                        2500                                    </td>
+                                <td class="oa-numeric-column">                                        2500                                    </td>
+                                <td class="oa-numeric-column">                                        -0.03                                    </td>
+                            </tr>
+                            <tr>
+                              <td class="oa-numeric-column">-55.71</td>
+                              <td class="oa-numeric-column">                                        0                                    </td>
+                              <td class="oa-numeric-column">                                        0                                    </td>
+                              <td class="oa-numeric-column">                                        0                                    </td>
+                              <td class="oa-numeric-column">                                        0                                    </td>
+                              <td></td>
+                              <td class="oa-strike-column">760</td>
+                              <td></td>
+                              <td class="oa-numeric-column">                                        1.1                                    </td>
+                              <td class="oa-numeric-column">                                        51.84                                    </td>
+                              <td class="oa-numeric-column">                                        2500                                    </td>
+                              <td class="oa-numeric-column">                                        2500                                    </td>
+                              <td class="oa-numeric-column">                                        -0.03                                    </td>
+                          </tr>
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+        <!-- <div class="row">
+          <oa-progress size="40" stroke-width="8" complete="0.75" stroke="rgb(11,11,11)"></oa-progress>
+
+          <div id="ember5636" class="ember-view short-tile stock same">
+              <header class="tile-header">
+                  <h3 class="symbol">AA</h3>
+                  <div class="net-change">0.00</div>
+              </header>
+              <footer class="tile-footer">
+                  <i id="ember5645" class="ember-view icon notable-stocks tile" style="display:block;"></i><div class="price">7.54</div>
+                  <oa-progress size="40" stroke-width="8" complete="0.75" stroke="rgb(11,11,11)"></oa-progress>
+              </footer>
+          </div>
+        </div> -->
+    </div>
+
+    <script src="js/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="js/amcharts.js"></script>
+    <script type="text/javascript" src="js/serial.js"></script>
+    <script type="text/javascript" src="js/amstock.js"></script>
+    <script type="text/javascript" src="js/amChartsDirective.js"></script>
+    <script type="text/javascript" src="js/test.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/themes/chalk.js"></script> -->
+</body>
+</html>
