@@ -1,208 +1,50 @@
 <!DOCTYPE html>
 <html ng-app="oa" lang="en">
 <head>
-    <title>Jetty WebSocket Echo Examples</title>
-    <!-- <link rel="stylesheet" type="text/css" href="dough.css" media="all"> -->
+    <title>Nifty Trader</title>
+    <meta charset="utf-8" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css/angular-datepicker.min.css" media="all">
     <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css" media="all">
-    <link rel="stylesheet" type="text/css" href="css/xeditable.css" media="all">
     <link rel="stylesheet" type="text/css" href="css/apps.css" media="all">
+
 </head>
 <body>
-<div class="container-fluid oa-wrapper">
-    <!--<div id="container" style="height: 800px; min-width: 310px"></div>-->
-    <!--<oa-chart data="chartdata"></oa-chart>-->
+  <div class="container-fluid oa-wrapper">
     <div ng-controller="OaMainCtrl">
-        <div class="row">
-            <div class="col-lg-7" style="">
-                <div id="option-view" style="width: 100%;">
-                    <div class="row" style="background-color: rgb(241,242,237); padding-top: 8px; padding-bottom: 4px;">
-                        <div class="col-lg-3">
-                            <input type="text" id="ember4071" class="symbol-search" placeholder="Symbol search"
-                                   autocomplete="off" ng-model="symbol" ng-enter="send({symbol: symbol, event: 'oc'})">
-                        </div>
-                        <div id="option-top" class="col-lg-3"
-                             style="color: rgb(34,34,34); font-weight: 600; font-size: 1.0em; padding-top: 2px; padding-bottom: 2px;">
-                            {{optionData.symbol}}
-                        </div>
-
-                        <div id="option-top" class="col-lg-3"
-                             style="color: rgb(34,34,34); font-weight: 600; font-size: 1.0em; padding-top: 2px; padding-bottom: 2px;">
-                            {{optionData.name}}
-                        </div>
-                    </div>
-                    <div class="row" style="background-color: rgb(241,242,237); font-size: 1.3em;">
-                        <div class="col-lg-10" style="">
-                          <dl class="bid-ask-size">
-                            <dt>Last</dt>
-                            <dd class="bid">{{optionData.last}}</dd>
-                          </dl>
-
-                          <dl class="bid-ask-size">
-                            <dt>Change</dt>
-                            <dd class="bid">{{(optionData.prev - optionData.last).toFixed(2)}}</dd>
-                          </dl>
-                          <dl class="bid-ask-size">
-                            <dt>High/Low</dt>
-                            <dd class="bid">{{optionData.H}}/{{optionData.L}}</dd>
-                          </dl>
-                          <dl class="bid-ask-size">
-                          	<dt>Days Remain</dt>
-                          	<dd class="bid">{{optionData.days}}d</dd>
-                          </dl>
-                          <dl class="bid-ask-size">
-                            <dt>Implied Vol</dt>
-                            <dd class="bid">{{optionData.vol}}%</dd>
-                          </dl>
-                        </div>
-                        <div class="col-lg-2" style="">
-                            <oa-progress size="40" stroke-width="8" complete="optionData.ivrank" stroke="rgb(11,11,11)"></oa-progress>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div id="optiontable" class="col-lg-12">
-                            <table style="width: 100%;">
-                                <thead>
-                                  <tr class="oa-header-row">
-                                      <th class="oa-header-numeric-column">Delta</th>
-                                      <th class="oa-header-numeric-column">OI</th>
-                                      <th class="oa-header-numeric-column">OI Change</th>
-                                      <th class="oa-header-numeric-column">IV</th>
-                                      <th class="oa-header-numeric-column">Last Price</th>
-                                      <th class=""></th>
-                                      <th class="oa-header-strike-column">Strike</th>
-                                      <th class=""></th>
-                                      <th class="oa-header-numeric-column">Last Price</th>
-                                      <th class="oa-header-numeric-column">IV</th>
-                                      <th class="oa-header-numeric-column">OI Change</th>
-                                      <th class="oa-header-numeric-column">OI</th>
-                                      <th class="oa-header-numeric-column">Delta</th>
-                                  </tr>
-                                  <tr class="oa-expiry-header">
-                                      <th class="oa-header-numeric-column" colspan="5">{{optionData.printdate}}</th>
-                                      <th class=""></th>
-                                      <th class="oa-header-strike-column">13d</th>
-                                      <th class=""></th>
-                                      <th class="oa-header-numeric-column" colspan="5">Implied Vol: 35.46%</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr class="oa-hover-btn" ng-repeat="option in optionData.oc">
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.call_itm, 'oa-at-the-money-call': option.call_atm}">{{option.call_delta}}</td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.call_itm, 'oa-at-the-money-call': option.call_atm}">{{option.call_oi}}</td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.call_itm, 'oa-at-the-money-call': option.call_atm}">{{option.call_oic}}</td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.call_itm, 'oa-at-the-money-call': option.call_atm}">{{option.call_iv}}</td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.call_itm, 'oa-at-the-money-call': option.call_atm}">{{option.call_ltp}}</td>
-                                    <td>
-                                        <button class="oa-action-btn oa-action-btn-blue" ng-click="addPos(option, 'CE')">+</button>
-                                    </td>
-                                    <td class="oa-strike-column">{{option.strike}}</td>
-                                    <td>
-                                        <button class="oa-action-btn oa-action-btn-blue" ng-click="addPos(option, 'PE')">+</button>
-                                    </td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.put_itm, 'oa-at-the-money-put': option.put_atm}">{{option.put_ltp}}</td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.put_itm, 'oa-at-the-money-put': option.put_atm}">{{option.put_iv}}</td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.put_itm, 'oa-at-the-money-put': option.put_atm}">{{option.put_oic}}</td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.put_itm, 'oa-at-the-money-put': option.put_atm}">{{option.put_oi}}</td>
-                                    <td class="oa-numeric-column" ng-class="{'oa-in-the-money': option.put_itm, 'oa-at-the-money-put': option.put_atm}">{{option.put_delta}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
-
+      <div class="row" style="margin-bottom: 20px;">
+      </div>
+      <div class="row">
+        <div class="col-sm-1 side-nav"  style="width: 70px; padding-top: 100px; margin-left: 3px; padding-left: 2px;">
+          <nav>
+            <div>
+              <a class="active" href="#/homePage"  ng-click="switchTemplate('optionchain.html')">
+                <i class="icon-font sidenav home"></i>Home
+              </a>
+              <a href="#"><i class="icon-font sidenav portfolio"  ng-click="switchTemplate('positions.html')"></i>Portfolio</a>
+              <a href="#"><i class="icon-font sidenav analyze" ng-click="switchTemplate('analyze.html')"></i>Analyze</a>
+              <a href="#"><i class="icon-font sidenav activity" ng-click="switchTemplate('algo.html')"></i>Algorithm</a>
+              <a href="#"><i class="icon-font sidenav activity" ng-click="switchTemplate('data.html')"></i>Data</a>
+              <a href="#"><i class="icon-font sidenav activity" ng-click="switchTemplate('fii.html')"></i>Fii</a>
             </div>
-            <div class="col-lg-5" style="padding-top: 30px;">
-                <div class="row">
-                    <div class="col-lg-12" style="height: 400px; padding-top: 10px; padding-left: 10px;">
-                        <am-chart id="lineChart" height="360px" options="amChartOptions"></am-chart>
-                    </div>
-                </div>
-                <div class="row">
-                  <select name="tradeType" id="tradeType" ng-model="tradeType" class="oa-select">
-                    <option value="Call Spread" selected>Call Spread</option>
-                    <option value="Put Spread">Put Spread</option>
-                    <option value="Short Put">Short Put</option>
-                    <option value="Short Call">Short Call</option>
-                  </select>
-                  <input type="text" class="oa-select" ng-model="lots">
-                  <button class="btn-control" ng-click="send({event:'NewTrade',tradeType: tradeType, symbol: optionData.symbol})">
-                    <span class="glyphicon glyphicon-hand-right"></span>
-                  </button>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div>
-                          <dl class="bid-ask-size">
-                            <dt>Name</dt>
-                            <dd class="bid">{{trade.name}}</dd>
-                          </dl>
-                          <dl class="bid-ask-size">
-                            <dt>Date</dt>
-                            <dd class="bid">{{trade.date}}</dd>
-                          </dl>
-                          <dl class="bid-ask-size">
-                            <dt>Delta</dt>
-                            <dd class="bid">{{(trade.delta).toFixed(3)}}</dd>
-                          </dl>
-                        </div>
-                        <table style="width: 100%;">
-                            <thead>
-                            <tr class="oa-header-row">
-                                <th class="oa-header-text-column">Symbol</th>
-                                <th  class="oa-header-text-column">Buy/Sell</th>
-                                <th  class="oa-header-text-column">Type</th>
-                                <th class="oa-header-numeric-column">Strike</th>
-                                <th class="oa-header-numeric-column">Qty</th>
-                                <th class="oa-header-numeric-column">Price</th>
-                                <th class="oa-header-numeric-column">Delta</th>
-                                <th class="oa-header-numeric-column" colspan="2">Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr  ng-repeat="position in trade.positions">
-                                <td class="oa-text-column">{{position.symbol}}</td>
-                                <td class="oa-text-column">{{position.side}}</td>
-                                <td class="oa-text-column">{{position.opt_type}}</td>
-                                <td class="oa-numeric-column">{{position.strike}}</td>
-                                <td class="oa-numeric-column">
-                                   <input size="6" name="qty" ng-model="position.qty" ng-enter="send({data: position,event: 'updateQty'})"/>
-                                </td>
-                                <td class="oa-numeric-column">
-                                  <input size="8" name="price" ng-model="position.price" ng-enter="send({data: position,event: 'updatePrice'})"/>
-                                </td>
-                                <td class="oa-numeric-column">{{position.delta}}</td>
-                                <td>
-                                    <button class="btn-control" style="margin: 0 1px 0 0;" ng-click="sendEvent('reversePos',position)">
-                                        <span class="glyphicon glyphicon-retweet"></span>
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn-control" style="margin: 0 1px 0 0;" ng-click="remvovePos(position, $index)">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+          </nav>
         </div>
+        <div class="col-lg-11">
+          <ng-include src="template"></ng-include>
+        </div>
+      </div>
     </div>
-</div>
-<script src="js/jquery-2.2.0.min.js"></script>
-<script type="text/javascript" src="js/angular.js"></script>
-<!--<script type="text/javascript" src="ng-websocket.js"></script>-->
-<script type="text/javascript" src="js/angular-websocket.js"></script>
-<script type="text/javascript" src="js/xeditable.js"></script>
-<script type="text/javascript" src="js/apps.js"></script>
-// amChartsDirective
-<script type="text/javascript" src="js/amcharts.js"></script>
-<script type="text/javascript" src="js/serial.js"></script>
-<script type="text/javascript" src="js/amChartsDirective.js"></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/themes/chalk.js"></script> -->
+  </div>
+  <script src="js/jquery-2.2.0.min.js"></script>
+  <script type="text/javascript" src="js/angular.js"></script>
+  <script type="text/javascript" src="js/angular-websocket.js"></script>
+  <script type="text/javascript" src="js/apps.js"></script>
+  <script type="text/javascript" src="js/amcharts.js"></script>
+  <script type="text/javascript" src="js/amstock.js"></script>
+  <script type="text/javascript" src="js/serial.js"></script>
+  <script type="text/javascript" src="js/liveSearch.js"></script>
+  <!-- <script type="text/javascript" src="js/moment.js"></script> -->
+  <script type="text/javascript" src="js/ui-bootstrap-1.2.5.min.js"></script>
+  <script type="text/javascript" src="js/amChartsDirective.js"></script>
 </body>
 </html>

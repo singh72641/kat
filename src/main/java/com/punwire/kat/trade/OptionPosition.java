@@ -38,9 +38,10 @@ public class OptionPosition extends Position{
         d.put("qty",qty);
         d.put("side", (qty>0?"Buy":"Sell"));
         d.put("price",avgPrice);
+        d.put("curr_price",currPrice);
         d.put("strike",option.getStrike());
         d.put("iv",option.getVolatility());
-        d.put("delta", NumberUtil.round(option.delta,4));
+        d.put("delta", NumberUtil.round( (qty > 0?1:-1) * option.delta,4));
         d.put("theta",NumberUtil.round(option.theta,4));
         d.put("rho",NumberUtil.round(option.rho,4));
         d.put("gamma",NumberUtil.round(option.gamma,4));

@@ -1,0 +1,78 @@
+{
+    "type": "serial",
+    "proCandlesticks": true,
+    "theme": "light",
+    "autoMarginOffset": 10,
+    "autoMargins": true,
+    "marginLeft": 50,
+    "marginTop" : 4,
+    "dataDateFormat": "YYYY-MM-DD",
+    "valueAxes": [{
+        "id": "v1",
+        "axisAlpha": 0,
+        "position": "left",
+        "ignoreAxisWidth": true
+    }],
+    "balloon": {
+        "borderThickness": 1,
+        "shadowAlpha": 0
+    },
+    "graphs": [{
+       "id": "g1",
+       "proCandlesticks": true,
+       "balloonText": "Open:<b>[[open]]</b><br>Low:<b>[[low]]</b><br>High:<b>[[high]]</b><br>Close:<b>[[close]]</b><br>",
+       "closeField": "close",
+       "fillColors": "#7f8da9",
+       "highField": "high",
+       "lineColor": "#7f8da9",
+       "lineAlpha": 1,
+       "lowField": "low",
+       "fillAlphas": 0.9,
+       "negativeFillColors": "#db4c3c",
+       "negativeLineColor": "#db4c3c",
+       "openField": "open",
+       "title": "Price:",
+       "type": "candlestick",
+       "valueField": "close",
+       "connect": true
+    }],
+    "chartCursor": {
+        "pan": true,
+        "valueLineEnabled": true,
+        "valueLineBalloonEnabled": true,
+        "cursorAlpha": 1,
+        "cursorColor": "#258cbb",
+        "limitToGraph": "g1",
+        "valueLineAlpha": 0.2
+    },
+    "mouseWheelZoomEnabled": true,
+    "categoryField": "point",
+    "categoryAxis": {
+        "parseDates": true,
+        "dashLength": 1,
+        "minorGridEnabled": false
+    },
+    "periodSelector": {
+      "position": "bottom",
+      "periods": [ {
+        "period": "DD",
+        "count": 10,
+        "label": "10 days"
+      }, {
+        "period": "MM",
+        "count": 1,
+        "label": "1 month"
+      }, {
+        "period": "YYYY",
+        "count": 1,
+        "label": "1 year"
+      }, {
+        "period": "YTD",
+        "label": "YTD"
+      }, {
+        "period": "MAX",
+        "label": "MAX"
+      } ]
+    },
+    "data": [{"point": "2010-01-01", "close": 110}]
+}

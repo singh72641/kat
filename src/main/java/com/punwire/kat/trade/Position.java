@@ -9,6 +9,7 @@ public class Position {
     int id;
     int qty;
     double avgPrice;
+    public double currPrice;
     LocalDate openDate;
     String symbol;
 

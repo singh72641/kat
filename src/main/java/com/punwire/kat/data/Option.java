@@ -1,5 +1,6 @@
 package com.punwire.kat.data;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.punwire.kat.options.BlackScholesGreeks;
 import com.punwire.kat.options.OptionDetails;
 import com.punwire.kat.options.OptionGreeks;
@@ -32,6 +33,8 @@ public class Option {
     public double rho;
     public double theta;
     public double vega;
+    public boolean itm;
+    public boolean atm=false;
 
 
     public Option(String symbol, String underLine, String optionType, LocalDate expiryDate, double strike){
@@ -49,8 +52,14 @@ public class Option {
         double dd = (days / 365.00);
         OptionDetails od = new OptionDetails(isCall,underlinePrice,strike,interest, dd ,volatility);
         OptionGreeks og =  BlackScholesGreeks.calculate( new OptionDetails(isCall,underlinePrice,strike,interest, dd ,volatility/100.00));
-        System.out.println(od .toString());
-        System.out.println(og.toString());
+        delta = og.delta;
+        gamma = og.gamma;
+        rho = og.rho;
+        theta = og.theta;
+        vega = og.vega;
+
+        //System.out.println(od .toString());
+        //System.out.println(og.toString());
         return og;
     }
 

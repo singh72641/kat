@@ -54,6 +54,7 @@ public class ZdOptionChain {
         d.put("expiry_date", DateUtil.intDate(expiryDate));
         d.put("strike",strikePrice);
         d.put("underlinePrice",underlinePrice);
+        d.put("call_symbol",call.getSymbol());
         d.put("call_itm",call.isITM());
         d.put("call_oi",call.getOpenInterest());
         d.put("call_oic",call.getOiChange());
@@ -63,11 +64,18 @@ public class ZdOptionChain {
         d.put("call_change",call.getLastChange());
         d.put("call_bid",call.getBidPrice());
         d.put("call_ask",call.getAskPrice());
+        d.put("call_atm",(call.atm?1:0));
+        d.put("put_atm",(put.atm?1:0));
+        double callTimeVal = ( underlinePrice > call.getStrike()?  call.getLastPrice() - (underlinePrice - call.getStrike()): call.getLastPrice() );
+        double putTimeVal = ( underlinePrice < put.getStrike()?  put.getLastPrice() - (put.getStrike() - underlinePrice) : put.getLastPrice() );
+        d.put("call_tval", greekFormatter.format(callTimeVal));
+        d.put("put_tval", greekFormatter.format(putTimeVal));
         d.put("call_delta", greekFormatter.format(call.delta));
         d.put("call_gamma", greekFormatter.format(call.gamma));
         d.put("call_rho", greekFormatter.format(call.rho));
         d.put("call_theta", greekFormatter.format(call.theta));
         d.put("call_vega", greekFormatter.format(call.vega));
+        d.put("put_symbol",put.getSymbol());
         d.put("put_oi",put.getOpenInterest());
         d.put("put_oic",put.getOiChange());
         d.put("put_volume",put.getVolume());
@@ -83,6 +91,60 @@ public class ZdOptionChain {
         d.put("put_theta", greekFormatter.format(put.theta));
         d.put("put_vega", greekFormatter.format(put.vega));
         return d;
+    }
+
+    public static ZdOptionChain fromJson(ObjectNode d){
+        String underline = d.get("symbol").asText();
+        int onDate = d.get("on_date").asInt();
+        int expDate = d.get("expiry_date").asInt();
+        double strikePrice = d.get("strike").asDouble();
+        double underlinePrice = d.get("underlinePrice").asDouble();
+        String call_symbol = d.get("call_symbol").asText();
+        String put_symbol = d.get("put_symbol").asText();
+        long callOi = d.get("call_oi").asLong();
+        long callOic = d.get("call_oic").asLong();
+        long callVolume = d.get("call_volume").asLong();
+        double callIv = d.get("call_iv").asDouble();
+        double callLtp = d.get("call_ltp").asDouble();
+        double callChange = d.get("call_change").asDouble();
+        double callBid = d.get("call_bid").asDouble();
+        double callAsk = d.get("call_ask").asDouble();
+        double callDelta = d.get("call_delta").asDouble();
+        double callGamma = d.get("call_gamma").asDouble();
+        double callRho = d.get("call_rho").asDouble();
+        double callTheta = d.get("call_theta").asDouble();
+        double callVega = d.get("call_vega").asDouble();
+
+        Option call = new Option(call_symbol,underline, underlinePrice,"CE",DateUtil.toDate(expDate),strikePrice,callLtp,callChange,callAsk,0,callBid,0,callIv,callOi,callOic,callVolume);
+        call.delta = callDelta;
+        call.gamma = callGamma;
+        call.theta = callTheta;
+        call.rho = callRho;
+        call.vega = callVega;
+
+        long putOi = d.get("put_oi").asLong();
+        long putOic= d.get("put_oic").asLong();
+        long putVolume = d.get("put_volume").asLong();
+        double putIv = d.get("put_iv").asDouble();
+        double putLtp = d.get("put_ltp").asDouble();
+        double putChange = d.get("put_change").asDouble();
+        double putBid = d.get("put_bid").asDouble();
+        double putAsk = d.get("put_ask").asDouble();
+        double putDelta = d.get("put_delta").asDouble();
+        double putGamma = d.get("put_gamma").asDouble();
+        double putRho = d.get("put_rho").asDouble();
+        double putTheta = d.get("put_theta").asDouble();
+        double putVega = d.get("put_vega").asDouble();
+
+        Option put = new Option(put_symbol,underline, underlinePrice,"PE",DateUtil.toDate(expDate),strikePrice,putLtp,putChange,putAsk,0,putBid,0,putIv,putOi,putOic,putVolume);
+        put.delta = putDelta;
+        put.gamma = putGamma;
+        put.rho = putRho;
+        put.theta = putTheta;
+        put.vega = putVega;
+
+        ZdOptionChain oc = new ZdOptionChain(underline,underlinePrice,DateUtil.toDate(onDate),DateUtil.toDate(expDate),strikePrice,call,put,0.10);
+        return oc;
     }
 
 }

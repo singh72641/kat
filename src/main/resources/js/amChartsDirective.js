@@ -251,11 +251,38 @@ angular.module('amChartsDirective', []).directive('amChart', ['$q', function ($q
 
           });
 
+          $scope.$on('amCharts.addData', function (event, data, id) {
+            if (id === $el[0].id || !id) {
+              chart.dataProvider.push(data);
+              chart.validateData();
+            }
+
+          });
+
           $scope.$on('amCharts.validateNow', function (event, validateData, skipEvents, id) {
             console.log("In event amCharts.validateNow");
             if (id === $el[0].id || !id) {
               chart.validateNow(validateData === undefined ? true : validateData,
                 skipEvents === undefined ? false : skipEvents);
+            }
+          });
+
+          $scope.$on('amCharts.addGuide', function (event, guide1, guide2, id) {
+            console.log("In event drawGuide");
+            if (id === $el[0].id || !id) {
+              var guide  = new AmCharts.Guide();
+              //guide.label = guide1;
+              guide.position = "top";
+              guide.lineAlpha = 1;
+              guide.fillAlpha = 0.3;
+              guide.fillColors = "#56990f";
+              guide.labelRotation = 90;
+              guide.lineColor = AmCharts.randomColor();
+              guide.inside = true;
+              guide.category = guide1;
+              guide.toCategory = guide2;
+              chart.categoryAxis.addGuide(guide);
+              chart.validateNow();
             }
           });
 

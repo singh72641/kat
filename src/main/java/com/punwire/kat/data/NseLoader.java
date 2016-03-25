@@ -1,19 +1,39 @@
 package com.punwire.kat.data;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.punwire.kat.core.AppConfig;
 import com.punwire.kat.core.DateUtil;
-import com.punwire.kat.trade.OptionPosition;
-import com.punwire.kat.trade.Trade;
 import com.punwire.kat.zerodha.ZdOptionChain;
-import com.punwire.kat.zerodha.ZdOptionMapper;
+import com.punwire.kat.zerodha.ZdSplit;
+import com.punwire.kat.zerodha.ZdSymbol;
 import org.apache.commons.lang3.text.WordUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.TrustStrategy;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.bson.Document;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -23,15 +43,22 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.ui.*;
 
+import javax.net.ssl.SSLContext;
+
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -52,7 +79,9 @@ public class NseLoader {
                                                 .appendPattern("ddMMMyyyy")
                                                 .toFormatter(Locale.ENGLISH);
     public static DateTimeFormatter yyMMM = DateTimeFormatter.ofPattern("yyMMM");
+    public static DateTimeFormatter yyMM = DateTimeFormatter.ofPattern("yyMM");
     public static DateTimeFormatter ddMMyyyy = DateTimeFormatter.ofPattern("ddMMyyyy");
+    public static DateTimeFormatter yyyy_MM_dd = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     public static DateTimeFormatter dd_mmm_yyyy = new DateTimeFormatterBuilder()
                                                     .parseCaseInsensitive()
                                                     .appendPattern("dd-MMM-yyyy")
@@ -220,7 +249,7 @@ public class NseLoader {
             line = br.readLine();
             while((line = br.readLine()) != null)
             {
-                //System.out.println(line);
+                System.out.println(line);
                 String[] parts = line.split(",");
                 String symbol = parts[0];
                 String type = parts[1];
@@ -241,6 +270,8 @@ public class NseLoader {
         if(success){
             f.delete();
         }
+
+        System.out.println("Done Processing " + bhavfileName);
     }
 
     public void processEqVol(LocalDate date) throws Exception
@@ -624,7 +655,7 @@ public class NseLoader {
 
     public void saveOptionChain(String symbol) {
         System.out.println("Downloading Option Chain For " + symbol);
-        HashMap<Double, ZdOptionChain> list = downloadOptionChain(symbol);
+        TreeMap<Double, ZdOptionChain> list = downloadOptionChain(symbol);
 
         System.out.println("Saving Option Chain For " + symbol);
         for(ZdOptionChain oc: list.values() ){
@@ -632,89 +663,89 @@ public class NseLoader {
         }
     }
 
-    public HashMap<Double, ZdOptionChain> downloadOptionChain(String underline)
-    {
-        startBrowser();
-        HashMap<Double, ZdOptionChain> ocList = new HashMap<>();
-        LocalDate asOfDate = LocalDate.now();
-
-        try {
-            System.out.println("Downloading Option Chain for " + underline);
-            driver.get("http://nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbol=" + URLEncoder.encode(underline) + "&instrument=-&date=-");
-
-            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-
-            WebElement ocForm =  driver.findElement(By.id("ocForm"));
-            WebElement hdoctable =  driver.findElement(By.id("wrapper_btm"));
-            List<WebElement> tables = hdoctable.findElements(By.tagName("table"));
-            System.out.println(tables.size());
-            double underlinePrice=0.0;
-            LocalDateTime dt = LocalDateTime.now();
-            for(WebElement table: tables)
-            {
-                int rowCount = table.findElements(By.tagName("tr")).size();
-                if(rowCount > 1) continue;
-                System.out.println(table.getAttribute("innerHTML"));
-                String currPriceString = table.findElement(By.tagName("b")).getText();
-                String[] parts1 = currPriceString.split(" ");
-                underlinePrice = Double.valueOf(parts1[1]);
-                String currTimeString = table.findElements(By.tagName("span")).get(1).getText();
-                currTimeString  = currTimeString.replaceAll("As on ", "");
-                currTimeString  = currTimeString.replaceAll("IST","").trim();
-                DateTimeFormatter fff = DateTimeFormatter.ofPattern("MMM dd, yyyy kk:mm:ss");
-                dt = LocalDateTime.parse(currTimeString,fff);
-                //As on Feb 05, 2016 15:30:45 IST
-                System.out.println(table.findElement(By.tagName("b")).getText());
-                System.out.println(currTimeString.replaceAll("As on ",""));
-                break;
-            }
-
-            asOfDate = dt.toLocalDate();
-            Select dateSelect = new Select(ocForm.findElement(By.id("date")));
-            String selectedDate = dateSelect.getFirstSelectedOption().getText();
-            LocalDate expiryDate = LocalDate.parse(selectedDate, ddMMMyyyy);
-            WebElement ocTable =  driver.findElement(By.id("octable"));
-
-            List<WebElement> trs = ocTable.findElements(By.tagName("tr"));
-            for(int r=2;r < trs.size();r++){
-                WebElement tr = trs.get(r);
-                List<WebElement> tds = tr.findElements(By.tagName("td"));
-                if( tds.size() < 8 ) continue;
-                long oiCall =  tds.get(1).getText().equals("-")? 0 : Long.valueOf(tds.get(1).getText().replaceAll(",",""));
-                long oiPut = tds.get(21).getText().equals("-")? 0 : Long.valueOf(tds.get(21).getText().replaceAll(",", ""));
-                if( oiCall == 0 && oiPut == 0 ) continue;
-                long oicCall = tds.get(2).getText().equals("-")? 0 : Long.valueOf(tds.get(2).getText().replaceAll(",", ""));
-                long vCall = tds.get(3).getText().equals("-")? 0 : Long.valueOf(tds.get(3).getText().replaceAll(",", ""));
-                double ivCall = tds.get(4).getText().equals("-")? 0.0 : Double.valueOf(tds.get(4).getText().replaceAll(",", ""));
-                double ltpCall = tds.get(5).getText().equals("-")? 0.0 : Double.valueOf(tds.get(5).getText().replaceAll(",", ""));
-                double changeCall = tds.get(6).getText().equals("-")? 0.0 : Double.valueOf(tds.get(6).getText().replaceAll(",", ""));
-                int bidQtyCall =  tds.get(7).getText().equals("-")? 0 : Integer.valueOf(tds.get(7).getText().replaceAll(",", ""));
-                double bidPriceCall = tds.get(8).getText().equals("-")? 0.0 : Double.valueOf(tds.get(8).getText().replaceAll(",", ""));
-                double askPriceCall = tds.get(9).getText().equals("-")? 0.0 : Double.valueOf(tds.get(9).getText().replaceAll(",", ""));
-                int askQtyCall = tds.get(10).getText().equals("-")? 0 : Integer.valueOf(tds.get(10).getText().replaceAll(",", ""));
-                Double strike = tds.get(11).getText().equals("-")? 0.0 : Double.valueOf(tds.get(11).getText().replaceAll(",", ""));
-                int bidQtyPut = tds.get(12).getText().equals("-")? 0 : Integer.valueOf(tds.get(12).getText().replaceAll(",", ""));
-                double bidPricePut = tds.get(13).getText().equals("-")? 0.0 : Double.valueOf(tds.get(13).getText().replaceAll(",", ""));
-                double askPricePut = tds.get(14).getText().equals("-")? 0.0 : Double.valueOf(tds.get(14).getText().replaceAll(",", ""));
-                int askQtyPut = tds.get(15).getText().equals("-")? 0 : Integer.valueOf(tds.get(15).getText().replaceAll(",", ""));
-                double changePut = tds.get(16).getText().equals("-")? 0.0 : Double.valueOf(tds.get(16).getText().replaceAll(",", ""));
-                double ltpPut = tds.get(17).getText().equals("-")? 0.0 : Double.valueOf(tds.get(17).getText().replaceAll(",", ""));
-                double ivPut = tds.get(18).getText().equals("-")? 0.0 : Double.valueOf(tds.get(18).getText().replaceAll(",", ""));
-                long vPut = tds.get(19).getText().equals("-")? 0 : Long.valueOf(tds.get(19).getText().replaceAll(",", ""));
-                long oicPut = tds.get(20).getText().equals("-")? 0 : Long.valueOf(tds.get(20).getText().replaceAll(",", ""));
-                String oSymbol = underline + yyMMM.format(expiryDate).toUpperCase() + strikePriceFormatter.format(strike);
-                Option call = new Option(oSymbol+"CE",underline, underlinePrice, "CE",expiryDate,strike, ltpCall, changeCall, askPriceCall,askQtyCall,bidPriceCall,bidQtyCall, ivCall, oiCall, oicCall,vCall);
-                Option put = new Option(oSymbol+"PE",underline, underlinePrice, "PE",expiryDate,strike,ltpPut, changePut, askPricePut,askQtyPut ,bidPricePut,bidQtyPut, ivPut, oiPut, oicPut,vPut);
-                ZdOptionChain oc = new ZdOptionChain(underline, underlinePrice, asOfDate, expiryDate, strike,call,put,0.0735);
-                oc.greeks(0.0735,asOfDate);
-                ocList.put(strike,oc);
-            }
-
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
-        return ocList;
-    }
+//    public HashMap<Double, ZdOptionChain> downloadOptionChain(String underline)
+//    {
+//        startBrowser();
+//        HashMap<Double, ZdOptionChain> ocList = new HashMap<>();
+//        LocalDate asOfDate = LocalDate.now();
+//
+//        try {
+//            System.out.println("Downloading Option Chain for " + underline);
+//            driver.get("http://nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbol=" + URLEncoder.encode(underline) + "&instrument=-&date=-");
+//
+//            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+//
+//            WebElement ocForm =  driver.findElement(By.id("ocForm"));
+//            WebElement hdoctable =  driver.findElement(By.id("wrapper_btm"));
+//            List<WebElement> tables = hdoctable.findElements(By.tagName("table"));
+//            System.out.println(tables.size());
+//            double underlinePrice=0.0;
+//            LocalDateTime dt = LocalDateTime.now();
+//            for(WebElement table: tables)
+//            {
+//                int rowCount = table.findElements(By.tagName("tr")).size();
+//                if(rowCount > 1) continue;
+//                System.out.println(table.getAttribute("innerHTML"));
+//                String currPriceString = table.findElement(By.tagName("b")).getText();
+//                String[] parts1 = currPriceString.split(" ");
+//                underlinePrice = Double.valueOf(parts1[1]);
+//                String currTimeString = table.findElements(By.tagName("span")).get(1).getText();
+//                currTimeString  = currTimeString.replaceAll("As on ", "");
+//                currTimeString  = currTimeString.replaceAll("IST","").trim();
+//                DateTimeFormatter fff = DateTimeFormatter.ofPattern("MMM dd, yyyy kk:mm:ss");
+//                dt = LocalDateTime.parse(currTimeString,fff);
+//                //As on Feb 05, 2016 15:30:45 IST
+//                System.out.println(table.findElement(By.tagName("b")).getText());
+//                System.out.println(currTimeString.replaceAll("As on ",""));
+//                break;
+//            }
+//
+//            asOfDate = dt.toLocalDate();
+//            Select dateSelect = new Select(ocForm.findElement(By.id("date")));
+//            String selectedDate = dateSelect.getFirstSelectedOption().getText();
+//            LocalDate expiryDate = LocalDate.parse(selectedDate, ddMMMyyyy);
+//            WebElement ocTable =  driver.findElement(By.id("octable"));
+//
+//            List<WebElement> trs = ocTable.findElements(By.tagName("tr"));
+//            for(int r=2;r < trs.size();r++){
+//                WebElement tr = trs.get(r);
+//                List<WebElement> tds = tr.findElements(By.tagName("td"));
+//                if( tds.size() < 8 ) continue;
+//                long oiCall =  tds.get(1).getText().equals("-")? 0 : Long.valueOf(tds.get(1).getText().replaceAll(",",""));
+//                long oiPut = tds.get(21).getText().equals("-")? 0 : Long.valueOf(tds.get(21).getText().replaceAll(",", ""));
+//                if( oiCall == 0 && oiPut == 0 ) continue;
+//                long oicCall = tds.get(2).getText().equals("-")? 0 : Long.valueOf(tds.get(2).getText().replaceAll(",", ""));
+//                long vCall = tds.get(3).getText().equals("-")? 0 : Long.valueOf(tds.get(3).getText().replaceAll(",", ""));
+//                double ivCall = tds.get(4).getText().equals("-")? 0.0 : Double.valueOf(tds.get(4).getText().replaceAll(",", ""));
+//                double ltpCall = tds.get(5).getText().equals("-")? 0.0 : Double.valueOf(tds.get(5).getText().replaceAll(",", ""));
+//                double changeCall = tds.get(6).getText().equals("-")? 0.0 : Double.valueOf(tds.get(6).getText().replaceAll(",", ""));
+//                int bidQtyCall =  tds.get(7).getText().equals("-")? 0 : Integer.valueOf(tds.get(7).getText().replaceAll(",", ""));
+//                double bidPriceCall = tds.get(8).getText().equals("-")? 0.0 : Double.valueOf(tds.get(8).getText().replaceAll(",", ""));
+//                double askPriceCall = tds.get(9).getText().equals("-")? 0.0 : Double.valueOf(tds.get(9).getText().replaceAll(",", ""));
+//                int askQtyCall = tds.get(10).getText().equals("-")? 0 : Integer.valueOf(tds.get(10).getText().replaceAll(",", ""));
+//                Double strike = tds.get(11).getText().equals("-")? 0.0 : Double.valueOf(tds.get(11).getText().replaceAll(",", ""));
+//                int bidQtyPut = tds.get(12).getText().equals("-")? 0 : Integer.valueOf(tds.get(12).getText().replaceAll(",", ""));
+//                double bidPricePut = tds.get(13).getText().equals("-")? 0.0 : Double.valueOf(tds.get(13).getText().replaceAll(",", ""));
+//                double askPricePut = tds.get(14).getText().equals("-")? 0.0 : Double.valueOf(tds.get(14).getText().replaceAll(",", ""));
+//                int askQtyPut = tds.get(15).getText().equals("-")? 0 : Integer.valueOf(tds.get(15).getText().replaceAll(",", ""));
+//                double changePut = tds.get(16).getText().equals("-")? 0.0 : Double.valueOf(tds.get(16).getText().replaceAll(",", ""));
+//                double ltpPut = tds.get(17).getText().equals("-")? 0.0 : Double.valueOf(tds.get(17).getText().replaceAll(",", ""));
+//                double ivPut = tds.get(18).getText().equals("-")? 0.0 : Double.valueOf(tds.get(18).getText().replaceAll(",", ""));
+//                long vPut = tds.get(19).getText().equals("-")? 0 : Long.valueOf(tds.get(19).getText().replaceAll(",", ""));
+//                long oicPut = tds.get(20).getText().equals("-")? 0 : Long.valueOf(tds.get(20).getText().replaceAll(",", ""));
+//                String oSymbol = underline + yyMMM.format(expiryDate).toUpperCase() + strikePriceFormatter.format(strike);
+//                Option call = new Option(oSymbol+"CE",underline, underlinePrice, "CE",expiryDate,strike, ltpCall, changeCall, askPriceCall,askQtyCall,bidPriceCall,bidQtyCall, ivCall, oiCall, oicCall,vCall);
+//                Option put = new Option(oSymbol+"PE",underline, underlinePrice, "PE",expiryDate,strike,ltpPut, changePut, askPricePut,askQtyPut ,bidPricePut,bidQtyPut, ivPut, oiPut, oicPut,vPut);
+//                ZdOptionChain oc = new ZdOptionChain(underline, underlinePrice, asOfDate, expiryDate, strike,call,put,0.0735);
+//                oc.greeks(0.0735,asOfDate);
+//                ocList.put(strike,oc);
+//            }
+//
+//        } catch (Exception ex){
+//            ex.printStackTrace();
+//        }
+//        return ocList;
+//    }
 
 
 
@@ -739,13 +770,18 @@ public class NseLoader {
         }
 
         //Now download Option Chains
-        //downloadOptionChain();
+        downloadOptionChain();
         printDates();
     }
 
-    public List<ZdOptionChain> testDirect(String underline)
+    public TreeMap<Double, ZdOptionChain> downloadOptionChain(String underline)
     {
-        String url = "http://nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbol=" + URLEncoder.encode(underline) + "&instrument=-&date=-";
+        return downloadOptionChain(underline,"-");
+    }
+    public TreeMap<Double, ZdOptionChain> downloadOptionChain(String underline, String expMonth)
+    {
+        if(expMonth == null || expMonth.length()==0) expMonth="-";
+        String url = "http://nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbol=" + URLEncoder.encode(underline) + "&instrument=-&date="+expMonth;
         System.out.println(url);
 
         LocalDate asOfDate = LocalDate.now();
@@ -759,7 +795,7 @@ public class NseLoader {
         get.addHeader("Host" , "nseindia.com");
         get.addHeader("DNT" , "1");
         get.addHeader("User-Agent" , "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0");
-        List<ZdOptionChain> ocList = new ArrayList<>();
+        TreeMap<Double, ZdOptionChain> ocList = new TreeMap<>();
         try {
 
             org.jsoup.nodes.Document doc = Jsoup.connect(url)
@@ -803,10 +839,9 @@ public class NseLoader {
             Element octable = doc.select("#octable").get(0);
             Elements  trs = octable.select("tr");
             for(int r=2;r < trs.size();r++){
-                  Element tr = trs.get(r);
-                  System.out.println(tr.text());
-                  Elements tds = tr.select("td");
-                  if( tds.size() < 8 ) continue;
+                Element tr = trs.get(r);
+                Elements tds = tr.select("td");
+                if( tds.size() < 8 ) continue;
                 long oiCall =  tds.get(1).text().equals("-")? 0 : Long.valueOf(tds.get(1).text().replaceAll(",",""));
                 long oiPut = tds.get(21).text().equals("-")? 0 : Long.valueOf(tds.get(21).text().replaceAll(",", ""));
                 if( oiCall == 0 && oiPut == 0 ) continue;
@@ -831,6 +866,7 @@ public class NseLoader {
                 long oicPut = tds.get(20).text().equals("-")? 0 : Long.valueOf(tds.get(20).text().replaceAll(",", ""));
 
                 if( ltpCall == 0 && ltpPut == 0 ) continue;
+                if( ltpCall < 1 || ltpPut < 1 ) continue;
 
 
                 String oSymbol = underline + yyMMM.format(expiryDate).toUpperCase() + strikePriceFormatter.format(strike);
@@ -838,7 +874,7 @@ public class NseLoader {
                 Option put = new Option(oSymbol+"PE",underline, underlinePrice, "PE",expiryDate,strike,ltpPut, changePut, askPricePut,askQtyPut ,bidPricePut,bidQtyPut, ivPut, oiPut, oicPut,vPut);
                 ZdOptionChain oc = new ZdOptionChain(underline, underlinePrice, asOfDate, expiryDate, strike,call,put,0.0735);
                 oc.greeks(0.0735, asOfDate);
-                ocList.add(oc);
+                ocList.put(strike, oc);
             }
 //            CloseableHttpResponse response = httpclient.execute(get);
 //            String result = EntityUtils.toString(response.getEntity());
@@ -848,6 +884,174 @@ public class NseLoader {
         }
         return ocList;
     }
+
+    public List<LocalDate> downloadDates()
+    {
+        String underline="NIFTY";
+        String url = "http://nseindia.com/live_market/dynaContent/live_watch/option_chain/optionKeys.jsp?symbol=" + URLEncoder.encode(underline) + "&instrument=-&date=-";
+        System.out.println(url);
+
+        List<LocalDate> dates = new ArrayList<>();
+
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet get = new HttpGet(url);
+        get.addHeader("Accept" , "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        get.addHeader("Accept-Encoding" , "gzip, deflate");
+        get.addHeader("Accept-Language" , "en-US,en;q=0.5");
+        get.addHeader("Connection" , "keep-alive");
+        get.addHeader("Host" , "nseindia.com");
+        get.addHeader("DNT" , "1");
+        get.addHeader("User-Agent" , "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0");
+        HashMap<Double, ZdOptionChain> ocList = new HashMap<>();
+        try {
+
+            org.jsoup.nodes.Document doc = Jsoup.connect(url)
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                    .header("Accept-Encoding", "gzip, deflate")
+                    .header("Accept-Language", "en-US,en;q=0.5")
+                    .header("Connection", "keep-alive")
+                    .header("Host", "nseindia.com")
+                    .header("DNT", "1")
+                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0")
+                    .get();
+
+            Element ocForm =  doc.select("#ocForm").get(0);
+            Elements dateSelect = ocForm.select("#date option");
+            boolean firstVal=true;
+            for(Element elem: dateSelect) {
+                if(firstVal) {
+                    firstVal = false;
+                    continue;
+                }
+                LocalDate expiryDate = LocalDate.parse(elem.text(), ddMMMyyyy);
+                System.out.println(expiryDate);
+                dates.add(expiryDate);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dates;
+    }
+    public void calculateMargin() {
+        String url = "https://zerodha.com/margin-calculator/SPAN/";
+        System.out.println(url);
+        try {
+                HttpClientBuilder b = HttpClientBuilder.create();
+
+                // setup a Trust Strategy that allows all certificates.
+                //
+                SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                    public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                        return true;
+                    }
+                }).build();
+                b.setSslcontext( sslContext);
+
+                // don't check Hostnames, either.
+                //      -- use SSLConnectionSocketFactory.getDefaultHostnameVerifier(), if you don't want to weaken
+                HostnameVerifier hostnameVerifier = SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER;
+
+                // here's the special part:
+                //      -- need to create an SSL Socket Factory, to use our weakened "trust strategy";
+                //      -- and create a Registry, to register it.
+                //
+                SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+                Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                        .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                        .register("https", sslSocketFactory)
+                        .build();
+
+                // now, we create connection-manager using our Registry.
+                //      -- allows multi-threaded use
+                PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager( socketFactoryRegistry);
+                b.setConnectionManager( connMgr);
+
+                // finally, build the HttpClient;
+                //      -- done!
+                HttpClient client = b.build();
+
+            ObjectNode form = AppConfig.mapper.createObjectNode();
+            form.put("action","calculate");
+            form.put("exchange[]","NFO");
+            form.put("product[]","OPT");
+            form.put("scrip[]","AJANTPHARM16FEB");
+            form.put("option_type[]","PE");
+            form.put("strike_price[]",1240);
+            form.put("qty[]",400);
+            form.put("trade[]","sell");
+
+
+//            action:calculate
+//            exchange[]:NFO
+//            product[]:OPT
+//            scrip[]:AJANTPHARM16FEB
+//            option_type[]:PE
+//            strike_price[]:1240
+//            qty[]:400
+//            trade[]:sell
+//            exchange[]:NFO
+//            product[]:OPT
+//            scrip[]:AJANTPHARM16FEB
+//            option_type[]:PE
+//            strike_price[]:1300
+//            qty[]:400
+//            trade[]:sell
+
+            List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+            urlParameters.add(new BasicNameValuePair("action","calculate"));
+            urlParameters.add(new BasicNameValuePair("exchange[]","NFO"));
+            urlParameters.add(new BasicNameValuePair("product[]","OPT"));
+            urlParameters.add(new BasicNameValuePair("scrip[]","AJANTPHARM16FEB"));
+            urlParameters.add(new BasicNameValuePair("option_type[]","PE"));
+            urlParameters.add(new BasicNameValuePair("strike_price[]","1240"));
+            urlParameters.add(new BasicNameValuePair("qty[]","400"));
+            urlParameters.add(new BasicNameValuePair("trade[]","sell"));
+            urlParameters.add(new BasicNameValuePair("exchange[]","NFO"));
+            urlParameters.add(new BasicNameValuePair("product[]","OPT"));
+            urlParameters.add(new BasicNameValuePair("scrip[]","AJANTPHARM16FEB"));
+            urlParameters.add(new BasicNameValuePair("option_type[]","PE"));
+            urlParameters.add(new BasicNameValuePair("strike_price[]","1300"));
+            urlParameters.add(new BasicNameValuePair("qty[]","400"));
+            urlParameters.add(new BasicNameValuePair("trade[]","sell"));
+
+            HttpPost p = new HttpPost(url);
+            p.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+            p.addHeader("X-Requested-With","XMLHttpRequest");
+            p.addHeader("Accept","application/json, text/javascript, */*; q=0.01");
+            p.addHeader("Accept-Encoding","gzip, deflate");
+            p.addHeader("Accept-Language","en-US, en; q=0.5");
+            p.addHeader("Cache-Control","no-cache");
+            p.addHeader("Connection","Keep-Alive");
+            p.addHeader("Referer","https://zerodha.com/margin-calculator/SPAN/");
+            p.addHeader("Host","zerodha.com");
+            p.addHeader("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2486.0 Safari/537.36 Edge/13.10586");
+
+            //Content-Length: 157
+            //Content-Type: ; charset=UTF-8
+           //Cookie: PHPSESSID=47snf10eoo6idoisjsaeb2qi67; __utmc=134287610; __utma=134287610.79898486.1455725926.1455775819.1455781993.4; __utmz=134287610.1455775819.3.3.utmcsr=bing|utmccn=(organic)|utmcmd=organic|utmctr=(not%20provided); _ga=GA1.2.79898486.1455725926; __utmb=134287610.2.10.1455781993; __utmt=1
+
+
+            HttpResponse r = client.execute(p);
+
+            BufferedReader rd = new BufferedReader(new InputStreamReader(r.getEntity().getContent()));
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                //Parse our JSON response
+//                JSONParser j = new JSONParser();
+//                JSONObject o = (JSONObject)j.parse(line);
+//                Map response = (Map)o.get("response");
+
+                System.out.println(line);
+            }
+
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+
     public void printDates(){
 
         MongoCollection col = db.database.getCollection("DailyBar");
@@ -901,43 +1105,286 @@ public class NseLoader {
             cursor.close();
         }
     }
+
+    public static double getNumValue(Cell cell)
+    {
+        if( cell.getCellType() == Cell.CELL_TYPE_STRING )
+        {
+            return Double.valueOf(cell.getStringCellValue());
+        }
+        return cell.getNumericCellValue();
+    }
+
+    public void getUrl(String url, Consumer<String> lineProcessor) throws Exception
+    {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet get = new HttpGet(url);
+        get.addHeader("Accept" , "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        get.addHeader("Accept-Encoding" , "gzip, deflate");
+        get.addHeader("Accept-Language" , "en-US,en;q=0.5");
+        get.addHeader("Connection" , "keep-alive");
+        get.addHeader("Host" , "nseindia.com");
+        get.addHeader("DNT" , "1");
+        get.addHeader("User-Agent" , "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0");
+        CloseableHttpResponse response = httpclient.execute(get);
+        // Get the response
+        BufferedReader rd = new BufferedReader
+                (new InputStreamReader(response.getEntity().getContent()));
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            lineProcessor.accept(line);
+        }
+        rd.close();
+        httpclient.close();
+    }
+
+    public void getEod1(String symbol)
+    {
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate;
+        while (startDate.isAfter(LocalDate.of(2007, 1, 1))) {
+            startDate = startDate.minusDays(50);
+            getEod1(symbol, startDate, endDate);
+            endDate = startDate;
+            try {
+                Thread.sleep(50L);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void getEod1()
+    {
+        List<ZdSymbol> symbols = AppConfig.db.getSymbols();
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusDays(15);
+        for(ZdSymbol symbol:symbols) {
+            //System.out.println(symbol.symbol);
+            if (!symbol.type.equals("EQ")) continue;
+            getEod1(symbol.symbol,startDate,endDate);
+        }
+    }
+
+    public void getEod1Full()
+    {
+        List<ZdSymbol> symbols = AppConfig.db.getSymbols();
+
+        for(ZdSymbol symbol:symbols) {
+            //System.out.println(symbol.symbol);
+            LocalDate endDate = LocalDate.now();
+            LocalDate startDate = endDate;
+            if (!symbol.type.equals("EQ")) continue;
+            while (startDate.isAfter(LocalDate.of(2007, 1, 1))) {
+                startDate = startDate.minusDays(50);
+                getEod1(symbol.symbol, startDate, endDate);
+                endDate = startDate;
+                try {
+                    Thread.sleep(200L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void getEod1(String symbol, LocalDate startDate, LocalDate endDate)
+    {
+        try {
+            System.out.println("Processing " + symbol + " " + startDate.toString() + "  ->  " + endDate.toString());
+            String url = "https://www1.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol=" + URLEncoder.encode(symbol, "UTF-8") + "&segmentLink=3&symbolCount=2&series=EQ&dateRange=+&fromDate=" + startDate.format(NseLoader.dd_mm_yyyy) + "&toDate=" + endDate.format(NseLoader.dd_mm_yyyy) + "&dataType=PRICEVOLUMEDELIVERABLE";
+                    //https://www1.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol=RELIANCE&segmentLink=3&symbolCount=2&series=ALL&dateRange=+&fromDate=01-03-2016&toDate=23-03-2016&dataType=PRICEVOLUMEDELIVERABLE
+            org.jsoup.nodes.Document doc = Jsoup.connect(url)
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                    .header("Accept-Encoding", "gzip, deflate")
+                    .header("Accept-Language", "en-US,en;q=0.5")
+                    .header("Connection", "keep-alive")
+                    .header("Host", "nseindia.com")
+                    .header("DNT", "1")
+                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0")
+                    .get();
+            Elements trs = doc.select("tr");
+            for(Element tr: trs)
+            {
+                try {
+                    Elements tds = tr.select("td");
+                    if( tds.size() < 8)
+                    {
+                        //System.out.println(" Symbol: " + symbol);
+                        //System.out.println(tr.text());
+                        continue;
+                    }
+                    String symboi = tds.get(0).text();
+                    String series   = tds.get(1).text();
+                    LocalDate date   = LocalDate.parse(tds.get(2).text(), NseLoader.dd_mmm_yyyy);
+                    double prev  = Double.valueOf(tds.get(3).text().replaceAll(",",""));
+                    double open   = Double.valueOf(tds.get(4).text().replaceAll(",", ""));
+                    double high   = Double.valueOf(tds.get(5).text().replaceAll(",", ""));
+                    double low   = Double.valueOf(tds.get(6).text().replaceAll(",", ""));
+                    double close   = Double.valueOf(tds.get(8).text().replaceAll(",", ""));
+                    double last = close;
+                    if( ! tds.get(7).text().equals("-") ) last   = Double.valueOf(tds.get(7).text().replaceAll(",", ""));
+                    double vwap   = Double.valueOf(tds.get(9).text().replaceAll(",", ""));
+                    long tradedqty   = Long.valueOf(tds.get(10).text().replaceAll(",", ""));
+                    double turnover   = Double.valueOf(tds.get(11).text().replaceAll(",", ""));
+                    long trades   = 0L;
+                    long delqty   = 0L;
+                    if( ! tds.get(13).text().equals("-") ) delqty = Long.valueOf(tds.get(13).text().replaceAll(",", ""));
+                    double del_pct   = 100.00;
+                    if( ! tds.get(14).text().equals("-") ) del_pct = Double.valueOf(tds.get(14).text().replaceAll(",", ""));
+                    AppConfig.db.saveEod1(symbol,series,date,prev,open,high,low,last,close,vwap,tradedqty,turnover,trades,delqty,del_pct);
+                } catch (MongoWriteException ex)
+                {
+
+                }
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public String getSplit(String symbol, LocalDate startDate)
+    {
+        try {
+            //System.out.println("Processing " + symbol + " " + startDate.toString() + "  ->  " + startDate.toString());
+            String url = "https://www1.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol=" + URLEncoder.encode(symbol, "UTF-8") + "&segmentLink=3&symbolCount=2&series=EQ&dateRange=+&fromDate=" + startDate.format(NseLoader.dd_mm_yyyy) + "&toDate=" + startDate.format(NseLoader.dd_mm_yyyy) + "&dataType=PRICEVOLUMEDELIVERABLE";
+            //https://www1.nseindia.com/products/dynaContent/common/productsSymbolMapping.jsp?symbol=RELIANCE&segmentLink=3&symbolCount=2&series=ALL&dateRange=+&fromDate=01-03-2016&toDate=23-03-2016&dataType=PRICEVOLUMEDELIVERABLE
+            org.jsoup.nodes.Document doc = Jsoup.connect(url)
+                    .header("Accept", "text/html,application/xhtml+xml,appliffcation/xml;q=0.9,*/*;q=0.8")
+                    .header("Accept-Encoding", "gzip, deflate")
+                    .header("Accept-Language", "en-US,en;q=0.5")
+                    .header("Connection", "keep-alive")
+                    .header("Host", "nseindia.com")
+                    .header("DNT", "1")
+                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0")
+                    .get();
+            Elements trs = doc.select("tr");
+            for(Element tr: trs)
+            {
+                Elements tds = tr.select("td");
+                if( tds.size() < 6 ) continue;
+                String title   = tds.get(2).attr("title");
+                //System.out.println("Title: " + title);
+                if( title != null) return title;
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    public void processFiiFile(LocalDate date){
+        try {
+            String dateString = date.format(dd_mmm_yyyy);
+            String excelFileName = "fii_stats_" + dateString.substring(0,3)+ dateString.substring(3,4).toUpperCase() + dateString.substring(4,6) + dateString.substring(6) +".xls";
+            CloseableHttpClient httpclient = HttpClients.createDefault();
+            String url = "https://www1.nseindia.com/content/fo/"+excelFileName;
+            HttpGet get = new HttpGet(url);
+            get.addHeader("Accept" , "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            get.addHeader("Accept-Encoding" , "gzip, deflate");
+            get.addHeader("Accept-Language" , "en-US,en;q=0.5");
+            get.addHeader("Connection" , "keep-alive");
+            get.addHeader("Host" , "nseindia.com");
+            get.addHeader("DNT" , "1");
+            get.addHeader("User-Agent" , "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:44.0) Gecko/20100101 Firefox/44.0");
+            CloseableHttpResponse response = httpclient.execute(get);
+            InputStream is = response.getEntity().getContent();
+            String filePath = "d:\\savedata\\"+excelFileName;
+            FileOutputStream fos = new FileOutputStream(new File(filePath));
+            int inByte;
+            while((inByte = is.read()) != -1)
+                fos.write(inByte);
+            is.close();
+            fos.close();
+            response.close();
+
+            System.out.println("Processing file " + filePath);
+            FileInputStream inputStream = new FileInputStream(new File(filePath));
+            Workbook workbook = new HSSFWorkbook(inputStream);
+            Sheet firstSheet = workbook.getSheetAt(0);
+
+            int startRow=0;
+            int startCell=0;
+            outerloop:
+            for( int i=0; i< 10; i++)
+            {
+                startRow = i;
+                Row row = firstSheet.getRow(i);
+                for(int c=0;c<5;c++) {
+                    startCell=c;
+                    Cell cell = row.getCell(c);
+                    if( cell.getCellType() == Cell.CELL_TYPE_STRING )
+                    {
+                        String value = cell.getStringCellValue();
+                        if( value.startsWith("INDEX")) break outerloop;
+                    }
+                }
+            }
+            for( int i=0; i< 4; i++)
+            {
+                Row row = firstSheet.getRow(startRow + i);
+                String type = row.getCell(startCell).getStringCellValue();
+                double buyContracts = getNumValue(row.getCell(startCell+1));
+                double buyAmount = getNumValue(row.getCell(startCell+2));
+                double sellContracts = getNumValue(row.getCell(startCell+3));
+                double sellAmount = getNumValue(row.getCell(startCell+4));
+                double oiContracts = getNumValue(row.getCell(startCell+5));
+                double oiAmount = getNumValue(row.getCell(startCell+6));
+
+                AppConfig.db.saveFiiData(date,type,buyContracts,buyAmount,sellContracts,sellAmount,
+                        oiContracts,oiAmount);
+            }
+
+            inputStream.close();
+            new File(filePath).delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args){
 
         try {
-            //NseLoader loader = new NseLoader();
-            //loader.downloadIndexFile(LocalDate.of(2016,2,12));
-//            LocalDate today = LocalDate.of(2016, 2, 12);
-//            int lastDate =  20160101;
-//            int todayInt = DateUtil.intDate(today);
-//            int daysToFetch = todayInt - lastDate;
-//            for(int i=0; i< daysToFetch; i++)
-//            {
-//                LocalDate prevDay  = today.minusDays(i);
-//
-//                if ( prevDay.getDayOfWeek().getValue() > 5 ) continue;
-//                loader.downloadIndexFile(prevDay);
-//                loader.processIndexFile(prevDay);
-//            }
+            NseLoader loader = new NseLoader();
+            //AppConfig.db.deleteEod("ABIRLANUVO");
+            //loader.getEod1("ABIRLANUVO");
+            //AppConfig.db.updateSplit("APOLLOHOSP",LocalDate.of(2010,9,2),2);
 
-            //loader.dailyRun();
-            //loader.testDirect("RELIANCE");
-            String sym = "NIFTY16FEB6850PE";
-            sym = sym.substring(0, (sym.length()-2));
-            System.out.println( ZdOptionMapper.onlyLastNum(sym));
+            List<ZdSplit> list = AppConfig.db.findSplits();
+            for(ZdSplit split: list)
+            {
+                System.out.println(split.symbol + " " + split.date.toString() + " " + split.ratio);
+                String isSplit = loader.getSplit(split.symbol,split.date);
+                if( isSplit != null && isSplit.contains("BONUS 1:1"))
+                {
+                    System.out.println(split.date.toString());
+                    System.out.println(isSplit);
+                }
+                //break;
+            }
+                    //loader.getEod1("HAVELLS");
+            //AppConfig.db.fix();
+//            loader.dailyRun();
+            //AppConfig.db.fixMissing();
+            //AppConfig.db.findSplits();
 
-            //db.getIvRank("RELIANCE", LocalDate.now());
 
-//            ZdOptionChain op860 = db.getOption("RELIANCE", 860.00);
-//            ZdOptionChain op840 = db.getOption("RELIANCE", 840.00);
-//            OptionPosition ot1 = new OptionPosition(op860.put, -500,9.8,LocalDate.now());
-//            OptionPosition ot2 = new OptionPosition(op840.put, 500,4.65,LocalDate.now());
-//            Trade trade = new Trade("SPREAD",LocalDate.now());
-//            trade.addPosition(ot1);
-//            trade.addPosition(ot2);
-//            System.out.println(trade.toJson().toString());
-//            trade.getPnLAtExpiry( 820.0);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private static class DefaultTrustManager implements X509TrustManager {
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {}
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
         }
     }
 }

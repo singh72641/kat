@@ -1,5 +1,8 @@
 package com.punwire.kat.zerodha;
 
+import com.punwire.kat.core.AppConfig;
+import com.punwire.kat.data.NseLoader;
+
 /**
  * Created by Kanwal on 02/02/16.
  */
@@ -9,6 +12,33 @@ public class ZdOptionMapper {
     {
 
         return beforeNum(name);
+    }
+
+    public static String getExpMonth(String name)
+    {
+        String sym = getUnderline(name);
+        String eMonth = name.substring(sym.length(), sym.length() + 5 );
+        return eMonth;
+    }
+
+    public static String getExpDate(String name)
+    {
+        String sym = getUnderline(name);
+        String eMonth = name.substring(sym.length(), sym.length() + 5 );
+        return AppConfig.db.getExpDates(eMonth).format(NseLoader.ddMMMyyyy).toUpperCase();
+    }
+
+    public static String getOptType(String name)
+    {
+        return name.endsWith("CE")?"CE":"PE";
+
+    }
+
+    public static String getStrike(String name)
+    {
+        String val = name.substring(0,name.length()-2);
+        return onlyLastNum(val);
+
     }
 
     public static String beforeNum(String val)

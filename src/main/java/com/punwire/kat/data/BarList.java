@@ -25,6 +25,10 @@ public class BarList {
         this.duration = duration;
     }
 
+    public TreeMap<Long, Bar> getBars() {
+        return bars;
+    }
+
     public void addBar(Bar bar)
     {
         int time = DateUtil.intTime(bar.getStart());

@@ -1,5 +1,6 @@
 package com.punwire.kat.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.punwire.kat.core.AppConfig;
@@ -8,12 +9,15 @@ import com.punwire.kat.core.NumberUtil;
 import com.punwire.kat.data.Bar;
 import com.punwire.kat.data.NseLoader;
 import com.punwire.kat.zerodha.ZdOptionChain;
+import com.punwire.kat.zerodha.ZdOptionList;
 import com.punwire.kat.zerodha.ZdSymbol;
 import com.punwire.kat.zerodha.ZdVolatility;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Created by Kanwal on 13/02/16.
@@ -21,68 +25,43 @@ import java.util.List;
 public class OptionClassAction {
     static NseLoader loader = new NseLoader();
 
-    public static ObjectNode sendOptionChain(ObjectNode msg)
+    public static ObjectNode sendDates()
     {
-        String symbol = msg.get("symbol").asText();
+        TreeMap<String,LocalDate> dates =  AppConfig.db.getExpDates();
+        ArrayNode aNode = AppConfig.arrayNode();
+        for(LocalDate date: dates.values())
+        {
+            aNode.add( date.format(NseLoader.ddMMMyyyy).toUpperCase() );
+        }
+        ObjectNode result = AppConfig.objectNode();
+        System.out.println("Defautl Date: " + aNode.get(0).asText());
+        result.put("data", aNode);
+        result.put("event", "ExpDates");
+        return result;
+    }
+    public static ObjectNode sendOptionChain(String symbol, String expMonth)
+    {
+        System.out.println("+++++++++++ Month: " + expMonth);
         System.out.println(symbol);
 
         ObjectNode result = AppConfig.mapper.createObjectNode();
-        //Send Option Chain
-
-        //List<ZdOptionChain> options = AppConfig.db.geteOptionChain(symbol);
-
-        List<ZdOptionChain> options = loader.testDirect(symbol);
 
         Bar bar = AppConfig.db.getEod(symbol);
         ArrayNode data = AppConfig.mapper.createArrayNode();
         ObjectNode optionData = AppConfig.mapper.createObjectNode();
         ObjectNode eventData = AppConfig.mapper.createObjectNode();
+
+        ZdOptionList optionList = AppConfig.store.get(symbol);
+        data = optionList.toJson(expMonth);
+
         double currPrice= bar.getLast() ;
-        double prevStrike=0;
-        double optStep=0;
-        LocalDate expiryDate = LocalDate.now();
-        LocalDate onDate = LocalDate.now();
+        ZdVolatility vol = AppConfig.db.getVol(symbol, optionList.onDate);
 
-        for(ZdOptionChain option: options){
-            //option.greeks(0.0735,option.asOfDate);
-            ObjectNode on = option.toJson();
-            currPrice = option.underlinePrice;
-            Double strike = on.get("strike").asDouble();
-            if( prevStrike == 0 ) prevStrike = strike;
-            else {
-                optStep = strike - prevStrike;
-                prevStrike = strike;
-            }
-
-            if(  currPrice < strike && currPrice > (strike - optStep) ) {
-                on.put("call_atm",1);
-            }
-            else {
-                on.put("call_atm",0);
-            }
-
-            if(  currPrice > strike && currPrice < (strike + optStep) )  {
-                on.put("put_atm",1);
-            }
-            else {
-                on.put("put_atm", 0);
-            }
-
-
-            data.add( on );
-            currPrice = option.underlinePrice;
-            expiryDate = option.expiryDate;
-            onDate = option.asOfDate;
-        }
-        System.out.println("CurrPrice to check ITM and OTM " + currPrice);
-
-        ZdVolatility vol = AppConfig.db.getVol(symbol, onDate);
-
-        double ivRank = 0.25;
-        if( !symbol.equals("NIFTY") && !symbol.equals("BANKNIFTY") )  ivRank =  AppConfig.db.getIvRank(symbol, onDate);
+        double ivRank = 0.19;
+        if( !symbol.equals("NIFTY") && !symbol.equals("BANKNIFTY") )  ivRank =  AppConfig.db.getIvRank(symbol, optionList.onDate);
         System.out.println(vol.toString());
-
-        Duration d = Duration.between(LocalDate.now().atStartOfDay(), expiryDate.atStartOfDay());
+        double yearVol = optionList.getVolatility();
+        Duration d = Duration.between(LocalDate.now().atStartOfDay(), optionList.expiryDate.atStartOfDay());
         ZdSymbol lot = AppConfig.db.getLot(symbol);
 
         optionData.put("oc",data);
@@ -91,14 +70,19 @@ public class OptionClassAction {
         optionData.put("lot_size",lot.lotSize);
         optionData.put("ivrank", NumberUtil.round(ivRank, 2));
         optionData.put("date", DateUtil.intDate(bar.getStart()) );
-        optionData.put("printdate", NseLoader.printDate.format(expiryDate));
+        optionData.put("printdate", NseLoader.printDate.format(optionList.expiryDate));
         optionData.put("days", d.toDays());
-        optionData.put("vol", vol.yearVol * 100);
+
+        //(Stock price) x (Annualized Implied Volatility) x (Square Root of [days to expiration / 365]) = 1
+        double daysf = d.toDays() / 365.00;
+        double expect1 = currPrice * (vol.yearVol ) * Math.sqrt( daysf );
+        optionData.put("vol", NumberUtil.round(yearVol ,2));
         optionData.put("O", bar.getO() );
         optionData.put("H", bar.getH() );
         optionData.put("L", bar.getL() );
         optionData.put("C", currPrice );
         optionData.put("last", currPrice );
+        optionData.put("expected1",  NumberUtil.round(expect1,2) );
         optionData.put("prev", bar.getPrev() );
         double change = (bar.getLast() - bar.getPrev());
 
@@ -106,6 +90,8 @@ public class OptionClassAction {
         optionData.put("V", bar.getV() );
         result.put("data", optionData);
         result.put("event", "oc");
+
+        System.out.println(result.toString());
         return result;
     }
 }

@@ -1,3 +1,22 @@
+@font-face {
+    font-family: "Glyphicons";
+    font-style: normal;
+    font-weight: normal;
+    src: local("☺"), url("../fonts/glyphicons-regular.woff") format("woff"), url("../fonts/glyphicons-regular-2a245bf72a521233d6afe9f75840793e.ttf") format("truetype"), url("/assets/glyphicons-regular-48094e97c45968aa7952dcce84f48971.svg") format("svg");
+}
+@font-face {
+    font-family: "Glyphicons Halflings";
+    font-style: normal;
+    font-weight: normal;
+    src: local("☺"), url("../fonts/glyphiconshalflings-regular.woff") format("woff"), url("../fonts/glyphiconshalflings-regular-d37f60c40ede800975bacd4730999f1c.ttf") format("truetype"), url("/assets/glyphiconshalflings-regular-a79fa65a93a828e4e3eca445a9de9dca.svg") format("svg");
+}
+@font-face {
+    font-family: "Dough Icon Set";
+    font-style: normal;
+    font-weight: normal;
+    src: local("☺"), url("../fonts/dough-icon-set.woff") format("woff"), url("../fonts/dough-icon-set-7eeddfb462415fe0517f766dce6e1707.ttf") format("truetype"), url("/assets/dough-icon-set-89ad2acdc60b3640119fad447ea998d5.svg") format("svg");
+}
+
 .option-spacer {
     width: 20px;
     #background-color: green;
@@ -315,4 +334,2159 @@ dl.bid-ask-size dd {
 
 .edit-in-place.active input {
   display: inline-block;
+}
+
+
+/* AUTOCOMPLETE */
+.autoCompleteWrapper{
+    position: relative;
+    border-radius: 4px;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+}
+
+ul.autocompleteItems{
+  position: absolute;
+  left: 0;
+  padding-left: 0px;
+  width: 100%;
+  border: 1px solid #9c9c9c;
+  border-top:0px;
+  z-index: 1;
+  top: -5px;
+}
+
+.autocompleteItems li{
+  text-align: left;
+  list-style:none;
+  width: 100%;
+  background-color: #fff;
+  padding: 2px 2px;
+  cursor: pointer;
+}
+
+.autocompleteItems li.active, .autocompleteItems li:hover{
+  width: 100%;
+  background-color: #4bf;
+}
+
+.autocompleteItems .highlight {
+  background-color: #E2E2E2;
+}
+
+.autocompleteItems li.active .highlight {
+  background: #666;
+  color: #fff;
+}
+
+.side-nav {
+    /*background-color:  rgb(241,242,237);*/
+    background-color:  white;
+    width: 100%;
+    margin: 0px 0px;
+    height: 1000px;
+    border-right: 1px solid #9c9c9c;
+}
+
+.side-nav a {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 30px;
+    color: #767775;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 8px;
+    height: 60px;
+    margin: 2px 0;
+    padding-top: 11px;
+    position: relative;
+    text-transform: uppercase;
+    z-index: 1;
+}
+
+.icon-font.activity::before, nav.help-nav a.help-nav-link i.activity.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.arrow-up::before, nav.help-nav a.help-nav-link i.arrow-up.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.arrow-down::before, nav.help-nav a.help-nav-link i.arrow-down.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.arrow-left::before, nav.help-nav a.help-nav-link i.arrow-left.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.arrow-right::before, nav.help-nav a.help-nav-link i.arrow-right.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.ban::before, nav.help-nav a.help-nav-link i.ban.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.banner::before, nav.help-nav a.help-nav-link i.banner.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.bell::before, nav.help-nav a.help-nav-link i.bell.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.binoculars::before, nav.help-nav a.help-nav-link i.binoculars.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.calendar::before, nav.help-nav a.help-nav-link i.calendar.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.chat::before, nav.help-nav a.help-nav-link i.chat.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.chart::before, nav.help-nav a.help-nav-link i.chart.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.check::before, nav.help-nav a.help-nav-link i.check.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.chevron-up::before, nav.help-nav a.help-nav-link i.chevron-up.icon-view::before {
+    content: "";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.chevron-down::before, nav.help-nav a.help-nav-link i.chevron-down.icon-view::before {
+    content: "";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.chevron-left::before, nav.help-nav a.help-nav-link i.chevron-left.icon-view::before {
+    content: "";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.chevron-right::before, nav.help-nav a.help-nav-link i.chevron-right.icon-view::before {
+    content: "";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.circle-arrow-left::before, nav.help-nav a.help-nav-link i.circle-arrow-left.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.circle-arrow-right::before, nav.help-nav a.help-nav-link i.circle-arrow-right.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.clock::before, nav.help-nav a.help-nav-link i.clock.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.continue::before, nav.help-nav a.help-nav-link i.continue.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.cut::before, nav.help-nav a.help-nav-link i.cut.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.dashboard::before, nav.help-nav a.help-nav-link i.dashboard.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.doughjo::before, nav.help-nav a.help-nav-link i.doughjo.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.download::before, nav.help-nav a.help-nav-link i.download.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.details::before, nav.help-nav a.help-nav-link i.details.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.edit::before, nav.help-nav a.help-nav-link i.edit.icon-view::before {
+    content: "✏";
+    font-family: "Glyphicons";
+}
+.icon-font.exclamation-circle::before, nav.help-nav a.help-nav-link i.exclamation-circle.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.expired::before, nav.help-nav a.help-nav-link i.expired.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.favorite::before, nav.help-nav a.help-nav-link i.favorite.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.favorite-empty::before, nav.help-nav a.help-nav-link i.favorite-empty.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.feedback::before, nav.help-nav a.help-nav-link i.feedback.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.filter::before, nav.help-nav a.help-nav-link i.filter.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.form::before, nav.help-nav a.help-nav-link i.form.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.graph::before, nav.help-nav a.help-nav-link i.graph.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.grid::before, nav.help-nav a.help-nav-link i.grid.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.help::before, nav.help-nav a.help-nav-link i.help.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.higher::before, nav.help-nav a.help-nav-link i.higher.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.home::before, nav.help-nav a.help-nav-link i.home.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.journal::before, nav.help-nav a.help-nav-link i.journal.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.keys::before, nav.help-nav a.help-nav-link i.keys.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.leaf::before, nav.help-nav a.help-nav-link i.leaf.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.link::before, nav.help-nav a.help-nav-link i.link.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.list::before, nav.help-nav a.help-nav-link i.list.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.lock::before, nav.help-nav a.help-nav-link i.lock.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.login::before, nav.help-nav a.help-nav-link i.login.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.loser::before, nav.help-nav a.help-nav-link i.loser.icon-view::before {
+    content: "☂";
+    font-family: "Glyphicons";
+}
+.icon-font.minus::before, nav.help-nav a.help-nav-link i.minus.icon-view::before {
+    content: "−";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.minus-circle::before, nav.help-nav a.help-nav-link i.minus-circle.icon-view::before {
+    content: "";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.more::before, nav.help-nav a.help-nav-link i.more.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.move::before, nav.help-nav a.help-nav-link i.move.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.notable::before, nav.help-nav a.help-nav-link i.notable.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.ok::before, nav.help-nav a.help-nav-link i.ok.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.ok-circle::before, i.icon-font.icon-check.active::before, nav.help-nav a.help-nav-link i.icon-check.active.icon-view::before, nav.help-nav a.help-nav-link i.ok-circle.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.ok-circle2::before, nav.help-nav a.help-nav-link i.ok-circle2.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.open-account::before, nav.help-nav a.help-nav-link i.open-account.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.order-chains::before, nav.help-nav a.help-nav-link i.order-chains.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.options::before, nav.help-nav a.help-nav-link i.options.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.pen::before, nav.help-nav a.help-nav-link i.pen.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.play::before, nav.help-nav a.help-nav-link i.play.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.plus::before, nav.help-nav a.help-nav-link i.plus.icon-view::before {
+    content: "+";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.plus-circle::before, nav.help-nav a.help-nav-link i.plus-circle.icon-view::before {
+    content: "";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.portfolio::before, nav.help-nav a.help-nav-link i.portfolio.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.refresh::before, nav.help-nav a.help-nav-link i.refresh.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.remove::before, nav.help-nav a.help-nav-link i.remove.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.remove-circle::before, nav.help-nav a.help-nav-link i.remove-circle.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.remove-circle2::before, nav.help-nav a.help-nav-link i.remove-circle2.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.repeat::before, nav.help-nav a.help-nav-link i.repeat.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.replace::before, nav.help-nav a.help-nav-link i.replace.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.ribbon::before, nav.help-nav a.help-nav-link i.ribbon.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.share::before, nav.help-nav a.help-nav-link i.share.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.save::before, nav.help-nav a.help-nav-link i.save.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.search::before, nav.help-nav a.help-nav-link i.search.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.settings::before, nav.help-nav a.help-nav-link i.settings.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.sort::before, nav.help-nav a.help-nav-link i.sort.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.stats::before, nav.help-nav a.help-nav-link i.stats.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.icon-star::before, nav.help-nav a.help-nav-link i.icon-star.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.icon-star-active::before, i.icon-font.icon-star.active::before, nav.help-nav a.help-nav-link i.icon-star.active.icon-view::before, nav.help-nav a.help-nav-link i.icon-star-active.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.snapshot::before, nav.help-nav a.help-nav-link i.snapshot.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.support::before, nav.help-nav a.help-nav-link i.support.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.table::before, nav.help-nav a.help-nav-link i.table.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.terms::before, nav.help-nav a.help-nav-link i.terms.icon-view::before {
+    content: "";
+    font-family: "Glyphicons Halflings";
+}
+.icon-font.tools::before, nav.help-nav a.help-nav-link i.tools.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.trash::before, nav.help-nav a.help-nav-link i.trash.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.unlock::before, nav.help-nav a.help-nav-link i.unlock.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.user::before, nav.help-nav a.help-nav-link i.user.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.reset::before, nav.help-nav a.help-nav-link i.reset.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.warning::before, nav.help-nav a.help-nav-link i.warning.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.zoom-in::before, nav.help-nav a.help-nav-link i.zoom-in.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.zoom-out::before, nav.help-nav a.help-nav-link i.zoom-out.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.ignored::before, nav.help-nav a.help-nav-link i.ignored.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.unignore::before, nav.help-nav a.help-nav-link i.unignore.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.winner::before, nav.help-nav a.help-nav-link i.winner.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.envelope::before, nav.help-nav a.help-nav-link i.envelope.icon-view::before {
+    content: "✉";
+    font-family: "Glyphicons";
+}
+.icon-font.conversation::before, nav.help-nav a.help-nav-link i.conversation.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.globe::before, nav.help-nav a.help-nav-link i.globe.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.lists::before, nav.help-nav a.help-nav-link i.lists.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.trade::before, nav.help-nav a.help-nav-link i.trade.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.circle-home::before, nav.help-nav a.help-nav-link i.circle-home.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.checkmark::before, nav.help-nav a.help-nav-link i.checkmark.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.backpack::before, nav.help-nav a.help-nav-link i.backpack.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.headband::before, nav.help-nav a.help-nav-link i.headband.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.cash-bag::before, nav.help-nav a.help-nav-link i.cash-bag.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.cooz::before, nav.help-nav a.help-nav-link i.cooz.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.ipad::before, nav.help-nav a.help-nav-link i.ipad.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.gift-card::before, nav.help-nav a.help-nav-link i.gift-card.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.sunglasses::before, nav.help-nav a.help-nav-link i.sunglasses.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.bottle-opener::before, nav.help-nav a.help-nav-link i.bottle-opener.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.computer::before, nav.help-nav a.help-nav-link i.computer.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.more-circle::before, nav.help-nav a.help-nav-link i.more-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.search-circle::before, nav.help-nav a.help-nav-link i.search-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.popout-circle::before, nav.help-nav a.help-nav-link i.popout-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.flip::before, nav.help-nav a.help-nav-link i.flip.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.watch::before, nav.help-nav a.help-nav-link i.watch.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.earnings-circle::before, nav.help-nav a.help-nav-link i.earnings-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.group::before, nav.help-nav a.help-nav-link i.group.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.uptick-arrows::before, nav.help-nav a.help-nav-link i.uptick-arrows.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.downtick-arrows::before, nav.help-nav a.help-nav-link i.downtick-arrows.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.spreads::before, nav.help-nav a.help-nav-link i.spreads.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.down-tick-ruler::before, nav.help-nav a.help-nav-link i.down-tick-ruler.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.up-tick-ruler::before, nav.help-nav a.help-nav-link i.up-tick-ruler.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.edit-entry::before, nav.help-nav a.help-nav-link i.edit-entry.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.toggle-expand::before, nav.help-nav a.help-nav-link i.toggle-expand.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.icon-click::before, nav.help-nav a.help-nav-link i.icon-click.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.icon-click-active::before, i.icon-font.icon-click.active::before, nav.help-nav a.help-nav-link i.icon-click.active.icon-view::before, nav.help-nav a.help-nav-link i.icon-click-active.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.icon-click-small::before, i.icon-font.icon-click.small::before, nav.help-nav a.help-nav-link i.icon-click.small.icon-view::before, nav.help-nav a.help-nav-link i.icon-click-small.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.icon-click-small-active::before, i.icon-font.icon-click.small.active::before, nav.help-nav a.help-nav-link i.icon-click.small.active.icon-view::before, nav.help-nav a.help-nav-link i.icon-click-small-active.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.explain-circle::before, nav.help-nav a.help-nav-link i.explain-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.pause-circle::before, nav.help-nav a.help-nav-link i.pause-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.replay-circle::before, nav.help-nav a.help-nav-link i.replay-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.quiz-circle::before, nav.help-nav a.help-nav-link i.quiz-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.transcription::before, nav.help-nav a.help-nav-link i.transcription.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.interact-circle::before, nav.help-nav a.help-nav-link i.interact-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.ex-circle::before, nav.help-nav a.help-nav-link i.ex-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.check-circle::before, nav.help-nav a.help-nav-link i.check-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.certificate::before, nav.help-nav a.help-nav-link i.certificate.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.working-circle::before, nav.help-nav a.help-nav-link i.working-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.start-circle::before, nav.help-nav a.help-nav-link i.start-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.watch-circle::before, nav.help-nav a.help-nav-link i.watch-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.walkthrough-circle::before, nav.help-nav a.help-nav-link i.walkthrough-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.trade-circle::before, nav.help-nav a.help-nav-link i.trade-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.plan-circle::before, nav.help-nav a.help-nav-link i.plan-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.follow-circle::before, nav.help-nav a.help-nav-link i.follow-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.finish-circle::before, nav.help-nav a.help-nav-link i.finish-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.learn-circle::before, nav.help-nav a.help-nav-link i.learn-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.arrow-forward-circle::before, nav.help-nav a.help-nav-link i.arrow-forward-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.arrow-back-circle::before, nav.help-nav a.help-nav-link i.arrow-back-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.read-circle::before, nav.help-nav a.help-nav-link i.read-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.walkthrough::before, nav.help-nav a.help-nav-link i.walkthrough.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.plan::before, nav.help-nav a.help-nav-link i.plan.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.trade-leg::before, nav.help-nav a.help-nav-link i.trade-leg.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.funds::before, nav.help-nav a.help-nav-link i.funds.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.compass::before, nav.help-nav a.help-nav-link i.compass.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.finish::before, nav.help-nav a.help-nav-link i.finish.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.opposite::before, nav.help-nav a.help-nav-link i.opposite.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.similar::before, nav.help-nav a.help-nav-link i.similar.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.quotes::before, nav.help-nav a.help-nav-link i.quotes.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.easy::before, nav.help-nav a.help-nav-link i.easy.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.intermediate::before, nav.help-nav a.help-nav-link i.intermediate.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.backward::before, nav.help-nav a.help-nav-link i.backward.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.forward::before, nav.help-nav a.help-nav-link i.forward.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.edu::before, nav.help-nav a.help-nav-link i.edu.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.menu-circle::before, nav.help-nav a.help-nav-link i.menu-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.news::before, nav.help-nav a.help-nav-link i.news.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.play-circle::before, nav.help-nav a.help-nav-link i.play-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.advanced::before, nav.help-nav a.help-nav-link i.advanced.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.interact::before, nav.help-nav a.help-nav-link i.interact.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.tastytrade::before, nav.help-nav a.help-nav-link i.tastytrade.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.up-tick::before, i.icon-font.icon-tick.up::before, nav.help-nav a.help-nav-link i.icon-tick.up.icon-view::before, nav.help-nav a.help-nav-link i.up-tick.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.down-tick::before, i.icon-font.icon-tick.down::before, nav.help-nav a.help-nav-link i.icon-tick.down.icon-view::before, nav.help-nav a.help-nav-link i.down-tick.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.same-tick::before, i.icon-font.icon-tick.same::before, nav.help-nav a.help-nav-link i.icon-tick.same.icon-view::before, nav.help-nav a.help-nav-link i.same-tick.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.lists-circle::before, nav.help-nav a.help-nav-link i.lists-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.quotes-circle::before, nav.help-nav a.help-nav-link i.quotes-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.close-popup::before, .connection-status.disconnected button.btn-close-popup::before, nav.help-nav a.help-nav-link i.close-popup.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.close::before, nav.help-nav a.help-nav-link i.close.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.shorten::before, nav.help-nav a.help-nav-link i.shorten.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.signup-circle::before, nav.help-nav a.help-nav-link i.signup-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.trade2::before, nav.help-nav a.help-nav-link i.trade2.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.login-circle::before, nav.help-nav a.help-nav-link i.login-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.empty-circle::before, i.icon-font.icon-check:not(.active)::before, nav.help-nav a.help-nav-link i.icon-check.icon-view:not(.active)::before, nav.help-nav a.help-nav-link i.empty-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.info::before, nav.help-nav a.help-nav-link i.info.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.liquid::before, nav.help-nav a.help-nav-link i.liquid.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.widen::before, nav.help-nav a.help-nav-link i.widen.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.quantity-up::before, nav.help-nav a.help-nav-link i.quantity-up.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.quantity-down::before, nav.help-nav a.help-nav-link i.quantity-down.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.swap::before, nav.help-nav a.help-nav-link i.swap.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.illiquid::before, nav.help-nav a.help-nav-link i.illiquid.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.follow::before, nav.help-nav a.help-nav-link i.follow.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.export-csv::before, nav.help-nav a.help-nav-link i.export-csv.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.draggable::before, nav.help-nav a.help-nav-link i.draggable.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.clear::before, nav.help-nav a.help-nav-link i.clear.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.expiration-up::before, nav.help-nav a.help-nav-link i.expiration-up.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.expiration-down::before, nav.help-nav a.help-nav-link i.expiration-down.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.undo::before, nav.help-nav a.help-nav-link i.undo.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.redo::before, nav.help-nav a.help-nav-link i.redo.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.data-point-top-left::before, i.icon-font.ask-bid::before, nav.help-nav a.help-nav-link i.ask-bid.icon-view::before, nav.help-nav a.help-nav-link i.data-point-top-left.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.data-point-top-right::before, i.icon-font.delta-theta::before, nav.help-nav a.help-nav-link i.delta-theta.icon-view::before, nav.help-nav a.help-nav-link i.data-point-top-right.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.data-point-bottom-right::before, i.icon-font.high-low::before, nav.help-nav a.help-nav-link i.high-low.icon-view::before, nav.help-nav a.help-nav-link i.data-point-bottom-right.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.data-point-bottom-left::before, i.icon-font.volume-open::before, nav.help-nav a.help-nav-link i.volume-open.icon-view::before, nav.help-nav a.help-nav-link i.data-point-bottom-left.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.dragger::before, nav.help-nav a.help-nav-link i.dragger.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.pixel-chevron-right::before, nav.help-nav a.help-nav-link i.pixel-chevron-right.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.graph-vol::before, nav.help-nav a.help-nav-link i.graph-vol.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.order-chains-circle::before, nav.help-nav a.help-nav-link i.order-chains-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.stock-position-flag::before, nav.help-nav a.help-nav-link i.stock-position-flag.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.chain-broken::before, nav.help-nav a.help-nav-link i.chain-broken.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.briefcase-circle::before, nav.help-nav a.help-nav-link i.briefcase-circle.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.correlation::before, nav.help-nav a.help-nav-link i.correlation.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.comments::before, nav.help-nav a.help-nav-link i.comments.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.analyze::before, nav.help-nav a.help-nav-link i.analyze.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.more-text::before, nav.help-nav a.help-nav-link i.more-text.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.less-text::before, nav.help-nav a.help-nav-link i.less-text.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.mobile-has-option::before, nav.help-nav a.help-nav-link i.mobile-has-option.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.mobile-itm::before, nav.help-nav a.help-nav-link i.mobile-itm.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.mobile-notable::before, nav.help-nav a.help-nav-link i.mobile-notable.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.mobile-stock-only::before, nav.help-nav a.help-nav-link i.mobile-stock-only.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.column-config::before, nav.help-nav a.help-nav-link i.column-config.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.dividend-action::before, nav.help-nav a.help-nav-link i.dividend-action.icon-view::before {
+    content: "";
+    font-family: "Dough Icon Set";
+}
+.icon-font.facebook::before, nav.help-nav a.help-nav-link i.facebook.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.twitter::before, nav.help-nav a.help-nav-link i.twitter.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font.google::before, nav.help-nav a.help-nav-link i.google.icon-view::before {
+    content: "";
+    font-family: "Glyphicons";
+}
+.icon-font, .toolbar-toggle-box-button.active::after, .portfolio-page-header.collapsed nav.subnav button.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav button.toolbar-toggle-box-button.collapse::after, .page-view.journal.new-entry nav.subnav button.toolbar-toggle-box-button.subnav-button.journal::after, nav.help-nav a.help-nav-link i.icon-view {
+    color: inherit;
+    display: inline-block;
+    font-size: inherit;
+    font-weight: normal;
+    margin: 0 auto;
+    text-align: center;
+    vertical-align: middle;
+}
+.icon-font.active, .portfolio-page-header.collapsed nav.subnav button.icon-font.collapse, .page-view.account-page.collapse nav.subnav button.icon-font.collapse, .active.toolbar-toggle-box-button::after, .portfolio-page-header.collapsed nav.subnav button.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav button.toolbar-toggle-box-button.collapse::after, .page-view.journal.new-entry nav.subnav button.toolbar-toggle-box-button.subnav-button.journal::after, .page-view.journal.new-entry nav.subnav button.icon-font.subnav-button.journal, nav.help-nav a.help-nav-link i.active.icon-view {
+    color: black;
+}
+.icon-font::before, nav.help-nav a.help-nav-link i.icon-view::before {
+    display: inline-block;
+    vertical-align: -3px;
+}
+.btn .icon-font, .btn .toolbar-toggle-box-button.active::after, .btn .portfolio-page-header.collapsed nav.subnav button.toolbar-toggle-box-button.collapse::after, .portfolio-page-header.collapsed nav.subnav .btn button.toolbar-toggle-box-button.collapse::after, .btn .page-view.account-page.collapse nav.subnav button.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .btn button.toolbar-toggle-box-button.collapse::after, .btn .page-view.journal.new-entry nav.subnav button.toolbar-toggle-box-button.subnav-button.journal::after, .page-view.journal.new-entry nav.subnav .btn button.toolbar-toggle-box-button.subnav-button.journal::after, .btn nav.help-nav a.help-nav-link i.icon-view, nav.help-nav a.help-nav-link .btn i.icon-view {
+    font-size: 20px;
+}
+i.icon-font.button, i.button.toolbar-toggle-box-button.active::after, nav.help-nav a.help-nav-link i.button.icon-view {
+    background-color: #eff0eb;
+    border-radius: 20px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    font-size: 20px;
+    height: 20px;
+    margin-right: 6px;
+    padding: 2px;
+    position: relative;
+    vertical-align: -9px;
+    width: 20px;
+}
+i.icon-font.button::before, nav.help-nav a.help-nav-link i.button.icon-view::before {
+    left: 2px;
+    position: absolute;
+    top: -2px;
+}
+i.icon-font.button.add, i.button.add.toolbar-toggle-box-button.active::after, ul.trader-tiles.follow-page > li.trader-not-shown button.select-trader, nav.help-nav a.help-nav-link i.button.add.icon-view {
+    font-size: 22px;
+    height: 17px;
+    line-height: 28px;
+    margin-right: 5px;
+    margin-top: 1px;
+    padding: 4px 2px 3px 4px;
+    text-align: center;
+}
+i.uptick-arrows {
+    color: #56990f;
+}
+i.downtick-arrows {
+    color: #932c08;
+}
+
+.icon-font:before {
+    display: inline-block;
+    vertical-align: -3px;
+}
+
+.side-nav a.active .icon-font.sidenav, .side-nav a.active .sidenav.toolbar-toggle-box-button.active:after, .side-nav a.active .portfolio-page-header.collapsed nav.subnav button.sidenav.toolbar-toggle-box-button.collapse:after, .portfolio-page-header.collapsed nav.subnav .side-nav a.active button.sidenav.toolbar-toggle-box-button.collapse:after, .side-nav a.active .page-view.account-page.collapse nav.subnav button.sidenav.toolbar-toggle-box-button.collapse:after, .page-view.account-page.collapse nav.subnav .side-nav a.active button.sidenav.toolbar-toggle-box-button.collapse:after, .side-nav a.active .page-view.journal.new-entry nav.subnav button.sidenav.toolbar-toggle-box-button.subnav-button.journal:after, .page-view.journal.new-entry nav.subnav .side-nav a.active button.sidenav.toolbar-toggle-box-button.subnav-button.journal:after, .side-nav a.active nav.help-nav a.help-nav-link i.sidenav.icon-view, nav.help-nav a.help-nav-link .side-nav a.active i.sidenav.icon-view {
+    color: rgba(255,255,255,0.9);
+}
+
+
+.navigation-left-side, .side-nav, .side-nav a {
+    box-sizing: border-box;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    width: 60px;
+}
+.navigation-top-side, .navigation-view header.top-nav {
+    box-sizing: border-box;
+    height: 47px;
+}
+.top-nav-container dl.info-list.account {
+    margin: 0 10px 0 -10px;
+    width: 180px;
+}
+.top-nav-container dl.info-list.net-liq {
+    min-width: 72px;
+}
+.top-nav-container dl.info-list.today {
+    min-width: 52px;
+}
+.top-nav-container dl.info-list.buy-power {
+    min-width: 79px;
+}
+
+.navigation-view {
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 1024px;
+    z-index: 2;
+}
+.navigation-view header.top-nav {
+    background-color: #d9dad7;
+    border-bottom: 3px solid #afafaa;
+    display: inline-block;
+    overflow: visible;
+    position: relative;
+    vertical-align: top;
+    width: 964px;
+}
+.navigation-view header.top-nav .top-nav-container {
+    display: inline;
+}
+.navigation-view header.top-nav .top-nav-container button.streamer-status {
+    box-sizing: border-box;
+    height: 47px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    width: 50px;
+}
+.navigation-view header.top-nav .top-nav-container .quote-status-indicator.delayed {
+    left: -18px;
+    position: absolute;
+    top: 19px;
+}
+.navigation-view header.top-nav .pop-container {
+    display: inline-block;
+    height: 44px;
+    margin-left: 30px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 58px;
+}
+.navigation-view header.top-nav .pop-container .pop-bubble {
+    background-color: #afafaa;
+    border-radius: 29px;
+    box-sizing: border-box;
+    height: 58px;
+    left: 0;
+    padding: 12px 0;
+    position: absolute;
+    top: -6px;
+    width: 58px;
+}
+.navigation-view header.top-nav .pop-container .pop-bubble h2.pop-title {
+    color: #f1f2ed;
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+    font-size: 9px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+.navigation-view header.top-nav .pop-container .pop-bubble h2.pop-title.asterisk {
+    margin-bottom: 0;
+    margin-top: -7px;
+    padding-left: 10px;
+}
+.navigation-view header.top-nav .pop-container .pop-bubble h2.pop-title.asterisk::after {
+    color: #f1f2ed;
+    content: "*";
+    display: inline-block;
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+    font-size: 24px;
+    margin-left: 2px;
+    vertical-align: -4px;
+}
+.navigation-view header.top-nav .pop-container .pop-bubble .pop-value {
+    color: #5d87a1;
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 14px;
+}
+.navigation-view header.top-nav dl.info-list {
+    box-sizing: border-box;
+    display: inline-block;
+    height: 44px;
+    margin-left: 40px;
+    padding: 10px 0;
+    vertical-align: top;
+}
+.navigation-view header.top-nav dl.info-list.pointer {
+    cursor: pointer;
+}
+.navigation-view header.top-nav dl.info-list.align-right {
+    text-align: right;
+}
+.navigation-view header.top-nav dl.info-list dt {
+    color: #fff;
+    display: block;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 9px;
+    margin-bottom: 4px;
+    position: relative;
+    text-transform: uppercase;
+}
+.navigation-view header.top-nav dl.info-list dt.with-icon {
+    padding-right: 13px;
+}
+.navigation-view header.top-nav dl.info-list dt i.icon-view.icon-click {
+    color: #5d87a1;
+    font-size: 13px;
+    position: absolute;
+    right: -2px;
+    top: -3px;
+}
+.navigation-view header.top-nav dl.info-list dd {
+    color: #444;
+    display: block;
+    font-family: "Avenir Next Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 14px;
+}
+.navigation-view header.top-nav dl.info-list dd.light {
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+}
+.navigation-view header.top-nav dl.info-list dd.up {
+    color: #56990f;
+}
+.navigation-view header.top-nav dl.info-list dd.down {
+    color: #932c08;
+}
+.side-nav {
+    background-color: #fff;
+    border-right: 1px solid rgba(175, 175, 170, 0.5);
+    height: 722px;
+}
+.side-nav > .main-links {
+    position: relative;
+}
+.side-nav > .main-links .alert-count {
+    background-color: #9a972d;
+    border: 1px solid #fff;
+    border-radius: 20px;
+    box-sizing: border-box;
+    color: #f1f2ed;
+    font-size: 10px;
+    height: 20px;
+    line-height: 20px;
+    position: absolute;
+    right: 1px;
+    text-align: center;
+    top: -5px;
+    width: 20px;
+    z-index: 2;
+}
+.side-nav .icon-font.sidenav, .side-nav .sidenav.toolbar-toggle-box-button.active::after, .side-nav .portfolio-page-header.collapsed nav.subnav button.sidenav.toolbar-toggle-box-button.collapse::after, .portfolio-page-header.collapsed nav.subnav .side-nav button.sidenav.toolbar-toggle-box-button.collapse::after, .side-nav .page-view.account-page.collapse nav.subnav button.sidenav.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .side-nav button.sidenav.toolbar-toggle-box-button.collapse::after, .side-nav .page-view.journal.new-entry nav.subnav button.sidenav.toolbar-toggle-box-button.subnav-button.journal::after, .page-view.journal.new-entry nav.subnav .side-nav button.sidenav.toolbar-toggle-box-button.subnav-button.journal::after, .side-nav nav.help-nav a.help-nav-link i.sidenav.icon-view, nav.help-nav a.help-nav-link .side-nav i.sidenav.icon-view
+{
+    color: #999998;
+    display: block;
+    font-size: 22px;
+    margin: 0 auto 4px;
+}
+.side-nav a {
+    border-radius: 30px;
+    box-sizing: border-box;
+    color: #767775;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 8px;
+    height: 60px;
+    margin: 2px 0;
+    padding-top: 11px;
+    position: relative;
+    text-transform: uppercase;
+    z-index: 1;
+}
+.side-nav a.active {
+    background-color: #afafaa;
+    color: rgba(255, 255, 255, 0.9);
+}
+.side-nav a.active .icon-font.sidenav, .side-nav a.active .sidenav.toolbar-toggle-box-button.active::after, .side-nav a.active .portfolio-page-header.collapsed nav.subnav button.sidenav.toolbar-toggle-box-button.collapse::after, .portfolio-page-header.collapsed nav.subnav .side-nav a.active button.sidenav.toolbar-toggle-box-button.collapse::after, .side-nav a.active .page-view.account-page.collapse nav.subnav button.sidenav.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .side-nav a.active button.sidenav.toolbar-toggle-box-button.collapse::after, .side-nav a.active .page-view.journal.new-entry nav.subnav button.sidenav.toolbar-toggle-box-button.subnav-button.journal::after, .page-view.journal.new-entry nav.subnav .side-nav a.active button.sidenav.toolbar-toggle-box-button.subnav-button.journal::after, .side-nav a.active nav.help-nav a.help-nav-link i.sidenav.icon-view, nav.help-nav a.help-nav-link .side-nav a.active i.sidenav.icon-view {
+    color: rgba(255, 255, 255, 0.9);
+}
+.side-nav > .timestamp-view {
+    bottom: 2px;
+    color: #444;
+    display: block;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+    height: auto;
+    left: 0;
+    line-height: 14px;
+    padding: 5px 0;
+    position: absolute;
+    text-align: center;
+    width: 60px;
+}
+.side-nav > .timestamp-view > .market-state-indicator.timestamp {
+    display: block;
+    margin-left: 0;
+    margin-top: 2px;
+    text-align: center;
+}
+.side-nav > .timestamp-view > .market-state-indicator.timestamp.open {
+    color: #56990f;
+}
+.side-nav > .timestamp-view > .market-state-indicator.timestamp.closed {
+    color: #932c08;
+}
+.side-nav > .timestamp-view > .market-state-indicator.timestamp.afterHours {
+    color: #da6d2e;
+    display: block;
+}
+.side-nav > .timestamp-view > .market-state-indicator.timestamp.preMarket {
+    color: #da6d2e;
+    display: block;
+}
+.side-nav > .timestamp-view > .market-state-indicator.timestamp > .icon-font.clock, .side-nav > .timestamp-view > .market-state-indicator.timestamp > .clock.toolbar-toggle-box-button.active::after, .portfolio-page-header.collapsed nav.subnav .side-nav > .timestamp-view > .market-state-indicator.timestamp > button.clock.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .side-nav > .timestamp-view > .market-state-indicator.timestamp > button.clock.toolbar-toggle-box-button.collapse::after, .page-view.journal.new-entry nav.subnav .side-nav > .timestamp-view > .market-state-indicator.timestamp > button.clock.toolbar-toggle-box-button.subnav-button.journal::after, nav.help-nav a.help-nav-link .side-nav > .timestamp-view > .market-state-indicator.timestamp > i.clock.icon-view {
+    margin-right: 3px;
+    position: static;
+    vertical-align: 2px;
+}
+.subnav-button {
+    background-color: transparent;
+    border: 4px solid #d9dad7;
+    border-radius: 22px;
+    box-sizing: border-box;
+    color: #d9dad7;
+    cursor: pointer;
+    display: inline-block;
+    height: 44px;
+    margin-left: 15px;
+    padding: 0;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    width: 44px;
+}
+.subnav-button.highlight {
+    background-color: #5d87a1;
+    border-color: #5d87a1;
+    color: white;
+}
+.subnav-button:active {
+    top: 1px;
+}
+.subnav-button.active:not(.stroked), .portfolio-page-header.collapsed nav.subnav button.subnav-button.collapse:not(.stroked), .page-view.account-page.collapse nav.subnav button.subnav-button.collapse:not(.stroked), nav.subnav.account-page-subnav-controls > .subnav-button.filter.popup-active, header.account-page-header > .subnav > .subnav-button.filter.popup-active, .page-view.journal.new-entry nav.subnav button.subnav-button.journal:not(.stroked) {
+    background-color: #444;
+    border-color: #444;
+    color: #f2f2ed;
+}
+.subnav-button.active.stroked, .portfolio-page-header.collapsed nav.subnav button.subnav-button.stroked.collapse, .page-view.account-page.collapse nav.subnav button.subnav-button.stroked.collapse, .page-view.journal.new-entry nav.subnav button.subnav-button.stroked.journal {
+    border-color: #444;
+    color: #444;
+}
+.subnav-button.icon-font, .subnav-button.toolbar-toggle-box-button.active::after, .portfolio-page-header.collapsed nav.subnav button.subnav-button.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav button.subnav-button.toolbar-toggle-box-button.collapse::after, .page-view.journal.new-entry nav.subnav button.subnav-button.toolbar-toggle-box-button.journal::after, nav.help-nav a.help-nav-link i.subnav-button.icon-view {
+    font-size: 24px;
+    line-height: 24px;
+}
+.subnav-button[disabled] {
+    background-color: #ccc;
+    color: #aaa;
+    cursor: default;
+}
+.subnav-button:first-child {
+    margin-left: 0;
+}
+
+
+.portfolio-page-table-header-cell {
+    text-align: right;
+    text-transform: uppercase;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    color: #aaa;
+    cursor: default;
+    height: 50px;
+    border-top: 1px solid #dfdfdf;
+    border-bottom: 1px solid #dfdfdf;
+    padding: 12px 5px 10px 5px;
+}
+
+.portfolio-page-table-header-cell, .portfolio-page-table-cell {
+  border-left: 1px solid #dfdfdf;
+}
+
+.portfolio-page-table-cell {
+    color: #000;
+    font-size: 11px;
+    height: 34px;
+    padding: 12px 8px 0 5px;
+    text-align: right;
+}
+.portfolio-page-table-cell-include-in-calculations {
+    background-color: #fff;
+    border: medium none !important;
+    padding: 9px 0 0;
+    text-align: center;
+    width: 35px;
+}
+.portfolio-page-table-cell-include-in-calculations > .icon-font, .portfolio-page-table-cell-include-in-calculations > .toolbar-toggle-box-button.active::after, .portfolio-page-header.collapsed nav.subnav .portfolio-page-table-cell-include-in-calculations > button.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .portfolio-page-table-cell-include-in-calculations > button.toolbar-toggle-box-button.collapse::after, .page-view.journal.new-entry nav.subnav .portfolio-page-table-cell-include-in-calculations > button.toolbar-toggle-box-button.subnav-button.journal::after, nav.help-nav a.help-nav-link .portfolio-page-table-cell-include-in-calculations > i.icon-view {
+    color: #5d87a1;
+    font-size: 14px;
+}
+.portfolio-page-table-cell-include-in-calculations > .icon-font.active, .portfolio-page-header.collapsed nav.subnav .portfolio-page-table-cell-include-in-calculations > button.icon-font.collapse, .page-view.account-page.collapse nav.subnav .portfolio-page-table-cell-include-in-calculations > button.icon-font.collapse, .portfolio-page-table-cell-include-in-calculations > .active.toolbar-toggle-box-button::after, .portfolio-page-header.collapsed nav.subnav .portfolio-page-table-cell-include-in-calculations > button.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .portfolio-page-table-cell-include-in-calculations > button.toolbar-toggle-box-button.collapse::after, .page-view.journal.new-entry nav.subnav .portfolio-page-table-cell-include-in-calculations > button.toolbar-toggle-box-button.subnav-button.journal::after, .page-view.journal.new-entry nav.subnav .portfolio-page-table-cell-include-in-calculations > button.icon-font.subnav-button.journal, nav.help-nav a.help-nav-link .portfolio-page-table-cell-include-in-calculations > i.active.icon-view {
+    color: #5d87a1;
+}
+.portfolio-page-table-cell-include-in-calculations > .icon-font.portfolio-page-table-cell-has-working-order, .portfolio-page-table-cell-include-in-calculations > .portfolio-page-table-cell-has-working-order.toolbar-toggle-box-button.active::after, .portfolio-page-header.collapsed nav.subnav .portfolio-page-table-cell-include-in-calculations > button.portfolio-page-table-cell-has-working-order.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .portfolio-page-table-cell-include-in-calculations > button.portfolio-page-table-cell-has-working-order.toolbar-toggle-box-button.collapse::after, .page-view.journal.new-entry nav.subnav .portfolio-page-table-cell-include-in-calculations > button.portfolio-page-table-cell-has-working-order.toolbar-toggle-box-button.subnav-button.journal::after, nav.help-nav a.help-nav-link .portfolio-page-table-cell-include-in-calculations > i.portfolio-page-table-cell-has-working-order.icon-view {
+    color: #9a972d;
+}
+.portfolio-page-table-cell-symbol {
+    overflow: visible;
+    padding: 0 0 0 5px;
+    position: relative;
+    text-align: left;
+    width: 215px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-totals-title {
+    font-family: "Avenir Next Bold",arial,helvetica,verdana,sans-serif;
+    font-size: 16px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-title {
+    box-sizing: border-box;
+    color: #444;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Avenir Next Bold",arial,helvetica,verdana,sans-serif;
+    font-size: 14px;
+    width: 55px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-title > .underlying-symbol-indicators {
+    padding: 10px 0 0 1px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-title > .underlying-symbol-indicators.underlying-symbol-indicators-visible {
+    padding-top: 4px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-title > .in-the-money-indicator-container {
+    margin-top: 11px;
+}
+.portfolio-page-table-cell-symbol > .order-leg-pill-view.mini {
+    display: inline-block;
+    margin: 9px 0 0;
+    vertical-align: top;
+}
+.portfolio-page-table-cell-symbol > .order-leg-pill-view.mini > .order-leg-pill-view-property.mini.quantity {
+    width: 38px;
+}
+.portfolio-page-table-cell-symbol > .order-leg-pill-view.mini > .order-leg-pill-view-property.mini.shares-pill {
+    border: 1px solid #5d87a1;
+    border-radius: 5px;
+    color: #5d87a1;
+    font-family: "Avenir Next Medium",arial,helvetica,verdana,sans-serif;
+    line-height: 15px;
+    padding-left: 3px;
+    text-align: left;
+    text-transform: uppercase;
+    width: 131px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-nested-group-title {
+    border-bottom: 1px solid #dfdfdf;
+    color: #aaa;
+    display: inline-block;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    margin-top: 17px;
+    overflow: hidden;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+    width: 155px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-nested-group-remove {
+    position: absolute;
+    right: 0;
+    top: 5px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-nested-group-remove > i.icon-font, .portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-nested-group-remove > i.toolbar-toggle-box-button.active::after, nav.help-nav a.help-nav-link .portfolio-page-table-cell-symbol > .portfolio-page-table-cell-symbol-nested-group-remove > i.icon-view {
+    color: #aaa;
+    font-size: 20px;
+}
+.portfolio-page-table-cell-symbol > .portfolio-page-table-no-existing-position-title {
+    color: #da6d2e;
+    display: inline-block;
+    font-family: "Futura Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    margin-left: 24px;
+    text-transform: uppercase;
+}
+.portfolio-page-table-cell-summary-pill {
+    background-color: #5d87a1;
+    border: 1px solid #5d87a1;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: #f1f2ed;
+    display: inline-block;
+    font-family: "Avenir Next Medium",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+    line-height: 15px;
+    margin-left: 43px;
+    margin-top: 9px;
+    padding-left: 3px;
+    position: relative;
+    text-align: left;
+    text-transform: uppercase;
+    vertical-align: top;
+    width: 131px;
+}
+.portfolio-page-table-cell-summary-pill::after {
+    content: "";
+    font-family: "Glyphicons Halflings";
+    position: absolute;
+    right: 4px;
+}
+.portfolio-page-table-cell-summary-pill.portfolio-page-table-cell-summary-pill-collapsed {
+    background-color: inherit;
+    border-color: #afafaa;
+    color: gray;
+}
+.portfolio-page-table-cell-summary-pill.portfolio-page-table-cell-summary-pill-collapsed::after {
+    color: #999998;
+    content: "";
+}
+.portfolio-page-table-cell-pop {
+    width: 60px;
+}
+.portfolio-page-table-cell-pop > .pop-roc {
+    font-size: inherit;
+}
+.portfolio-page-table-cell-ext {
+    width: 65px;
+}
+.portfolio-page-table-cell-ext > .pop-roc {
+    font-size: inherit;
+}
+.portfolio-page-table-cell-delta {
+    width: 80px;
+}
+.portfolio-page-table-cell-theta {
+    width: 75px;
+}
+.portfolio-page-table-cell-cost {
+    width: 95px;
+}
+.portfolio-page-table-cell-current-value {
+    width: 95px;
+}
+.portfolio-page-table-cell-gain {
+    width: 95px;
+}
+.portfolio-page-table-cell-day-gain {
+    width: 80px;
+}
+.portfolio-page-table-row {
+    height: 34px;
+}
+.portfolio-page-table-row-last-entry > .portfolio-page-table-cell {
+    border-bottom: 1px solid #dfdfdf;
+}
+.portfolio-page-table-row-summary {
+    cursor: pointer;
+}
+.portfolio-page-table-row-summary > .portfolio-page-table-cell, .portfolio-page-table-row-nested-summary > .portfolio-page-table-cell {
+    border-bottom: 1px solid #dfdfdf;
+}
+.portfolio-page-table-row-summary > .portfolio-page-table-cell.portfolio-page-table-cell-symbol.portfolio-page-table-cell-symbol-expanded, .portfolio-page-table-row-nested-summary > .portfolio-page-table-cell.portfolio-page-table-cell-symbol.portfolio-page-table-cell-symbol-expanded {
+    border: medium none;
+}
+.portfolio-page-table-row-summary > .portfolio-page-table-cell:nth-child(n+5), .portfolio-page-table-row-nested-summary > .portfolio-page-table-cell:nth-child(n+5) {
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+}
+.portfolio-page-table-row-summary-expanded, .portfolio-page-table-row-nested-summary, .portfolio-page-table-row-nested {
+    background-color: #f2f2ed;
+}
+.portfolio-page-table-row-solo, .portfolio-page-table-row-nested {
+    cursor: pointer;
+    position: relative;
+}
+.portfolio-page-table-row-solo.portfolio-page-table-row-selected::before, .portfolio-page-table-row-nested.portfolio-page-table-row-selected::before {
+    background-color: rgba(93, 135, 161, 0.2);
+    border-radius: 6px;
+    bottom: 5px;
+    content: "";
+    left: 35px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+.portfolio-page-table-row-solo > .portfolio-page-table-cell {
+    border-bottom: 1px solid #dfdfdf;
+}
+.portfolio-page-table-row-working-order {
+    height: auto;
+    margin: 0 0 0 35px;
+}
+.portfolio-page-table-row-working-order.portfolio-page-table-row-last-entry {
+    border-bottom: 1px solid #dfdfdf;
+}
+.portfolio-page-table-working-order-wrapper {
+    background-color: #f2f2ed;
+    border: 1px solid #f2f2ed;
+    box-sizing: border-box;
+    margin: 2px 0;
+    padding: 10px 5px 10px 59px;
+}
+.portfolio-page-table-working-order-details {
+    display: inline-block;
+    width: 220px;
+}
+.portfolio-page-table-working-order-info {
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    margin-bottom: 10px;
+}
+.portfolio-page-table-working-order-placed-at {
+    display: inline-block;
+    width: 78px;
+}
+.portfolio-page-table-working-order-description {
+    display: inline-block;
+}
+.portfolio-page-table-working-order-leg {
+    margin-bottom: 10px;
+}
+.portfolio-page-table-working-order-leg > .order-leg-pill-view-property.quantity.mini {
+    width: 32px;
+}
+.portfolio-page-table-working-order-state {
+    display: inline-block;
+    margin-top: 21px;
+    vertical-align: top;
+}
+.portfolio-page-table-working-order-state > .flag {
+    line-height: 10px;
+    width: 60px;
+}
+.portfolio-page-table-working-order-wrapper > table.portfolio-page-table-working-order-price-comparison {
+    display: inline-block;
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    margin: 21px 0 0 20px;
+    vertical-align: top;
+    width: 115px;
+}
+.portfolio-page-table-working-order-extra-info {
+    display: inline-block;
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    margin: 21px 0 0 15px;
+    vertical-align: top;
+    width: 125px;
+}
+.portfolio-page-table-working-order-extra-info > .portfolio-page-table-working-order-partial-fills, .portfolio-page-table-working-order-extra-info > .portfolio-page-table-working-order-gtc-date {
+    position: relative;
+}
+.portfolio-page-table-working-order-extra-info > .portfolio-page-table-working-order-partial-fills::before, .portfolio-page-table-working-order-extra-info > .portfolio-page-table-working-order-gtc-date::before {
+    border-radius: 3px;
+    content: "";
+    height: 6px;
+    left: -10px;
+    position: absolute;
+    top: 2px;
+    width: 6px;
+}
+.portfolio-page-table-working-order-extra-info > .portfolio-page-table-working-order-partial-fills {
+    color: #5d87a1;
+    margin-bottom: 5px;
+}
+.portfolio-page-table-working-order-extra-info > .portfolio-page-table-working-order-partial-fills::before {
+    background-color: #5d87a1;
+}
+.portfolio-page-table-working-order-extra-info > .portfolio-page-table-working-order-gtc-date {
+    color: #dcd85d;
+}
+.portfolio-page-table-working-order-extra-info > .portfolio-page-table-working-order-gtc-date::before {
+    background-color: #dcd85d;
+}
+.portfolio-page-table-working-order-actions {
+    display: inline-block;
+    margin: 20px 0 0 60px;
+    vertical-align: top;
+}
+.portfolio-page-table-working-order-actions > .portfolio-page-table-working-order-action-cancel {
+    margin-right: 25px;
+}
+.portfolio-page-table-working-order-actions > .portfolio-page-table-working-order-action-edit {
+    color: #56990f;
+}
+.portfolio-page-table-working-order-actions .portfolio-page-table-working-order-action-icon {
+    display: inline-block;
+    font-size: 26px;
+    height: 35px;
+    margin-top: -14px;
+}
+.portfolio-page-table-working-order-action-text {
+    display: inline-block;
+    padding-left: 5px;
+    text-transform: uppercase;
+}
+.portfolio-page-table-row-no-existing-position > .portfolio-page-table-cell-symbol {
+    padding-top: 10px;
+}
+.portfolio-page-selected-positions-actions {
+    background-color: rgba(68, 68, 68, 0.98);
+    border-radius: 12px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    left: 35px;
+    padding: 8px 12px;
+    position: absolute;
+    white-space: nowrap;
+}
+.portfolio-page-selected-positions-actions > button.btn-close {
+    color: #999998;
+    font-size: 20px;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn {
+    border: medium none;
+    border-radius: 4px;
+    box-shadow: 1px 1px 4px rgba(50, 50, 50, 0.5);
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    height: 34px;
+    margin-right: 8px;
+    padding: 0;
+    position: relative;
+    vertical-align: top;
+    width: 74px;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn[disabled] {
+    cursor: default;
+    opacity: 0.5;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn:active {
+    top: 1px;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .icon-font, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .toolbar-toggle-box-button.active::after, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .portfolio-page-header.collapsed nav.subnav button.toolbar-toggle-box-button.collapse::after, .portfolio-page-header.collapsed nav.subnav .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn button.toolbar-toggle-box-button.collapse::after, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .page-view.account-page.collapse nav.subnav button.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn button.toolbar-toggle-box-button.collapse::after, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .page-view.journal.new-entry nav.subnav button.toolbar-toggle-box-button.subnav-button.journal::after, .page-view.journal.new-entry nav.subnav .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn button.toolbar-toggle-box-button.subnav-button.journal::after, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn nav.help-nav a.help-nav-link i.icon-view, nav.help-nav a.help-nav-link .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn i.icon-view {
+    color: #fff;
+    font-size: 14px;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .text {
+    left: 23px;
+    position: absolute;
+    text-align: left;
+    top: 6px;
+    width: 42px;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .icon-font, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .toolbar-toggle-box-button.active::after, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .portfolio-page-header.collapsed nav.subnav button.toolbar-toggle-box-button.collapse::after, .portfolio-page-header.collapsed nav.subnav .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn button.toolbar-toggle-box-button.collapse::after, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .page-view.account-page.collapse nav.subnav button.toolbar-toggle-box-button.collapse::after, .page-view.account-page.collapse nav.subnav .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn button.toolbar-toggle-box-button.collapse::after, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .page-view.journal.new-entry nav.subnav button.toolbar-toggle-box-button.subnav-button.journal::after, .page-view.journal.new-entry nav.subnav .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn button.toolbar-toggle-box-button.subnav-button.journal::after, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn nav.help-nav a.help-nav-link i.icon-view, nav.help-nav a.help-nav-link .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn i.icon-view {
+    left: 6px;
+    position: absolute;
+    top: 8px;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn .text {
+    color: #fff;
+    display: block;
+    font-size: 8px;
+    text-transform: uppercase;
+    white-space: normal;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn.close {
+    background-color: #c33a0b;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn.close .icon {
+    color: #c33a0b;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn.close-with-target-profit-percent {
+    background-color: #da6d2e;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn.close-with-target-profit-percent .icon {
+    color: #da6d2e;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn.roll {
+    background-color: #70c714;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn.roll .icon {
+    color: #70c714;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn.group {
+    background-color: #5d87a1;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn.group .icon {
+    color: #5d87a1;
+    position: absolute;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-close {
+    background-color: #c33a0b;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-close > i.icon.count {
+    color: #c33a0b;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-close-with-target-profit-percent {
+    background-color: #da6d2e;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-close-with-target-profit-percent > i.icon.count {
+    color: #da6d2e;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-roll {
+    background-color: #70c714;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-roll > i.icon.count {
+    color: #70c714;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-group {
+    background-color: #5d87a1;
+}
+.portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-group > i.icon-font.group, .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-group > i.group.toolbar-toggle-box-button.active::after, nav.help-nav a.help-nav-link .portfolio-page-selected-positions-actions > .portfolio-page-selected-positions-actions-btn-group > i.group.icon-view {
+    font-size: 20px;
+    left: 4px;
+    top: 3px;
+}
+.portfolio-page-selected-positions-counter {
+    color: #f1f2ed;
+    display: inline-block;
+    font-family: "Avenir Next",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    margin-right: 8px;
+}
+.portfolio-page-selected-positions-counter i.icon-view.icon-click {
+    color: #f1f2ed;
+    margin-right: 2px;
+    vertical-align: 2px;
+}
+.portfolio-page-selected-positions-actions-btn-close > i.icon.count.white, .portfolio-page-selected-positions-actions-btn-close-with-target-profit-percent > i.icon.count.white, .portfolio-page-selected-positions-actions-btn-roll > i.icon.count.white {
+    background-color: white;
+    border-radius: 2px 2px 0 0;
+    font-family: "Avenir Next Bold",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    height: 12px;
+    left: 5px;
+    position: absolute;
+    top: 8px;
+    width: 14px;
+}
+.portfolio-page-selected-positions-actions-btn-close > i.icon.count.white::after, .portfolio-page-selected-positions-actions-btn-close-with-target-profit-percent > i.icon.count.white::after, .portfolio-page-selected-positions-actions-btn-roll > i.icon.count.white::after {
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 6px solid #fff;
+    bottom: -6px;
+    content: "";
+    display: inline-block;
+    height: 0;
+    left: 0;
+    position: absolute;
+    vertical-align: middle;
+    width: 0;
+}
+.portfolio-page-selected-positions-actions-strategy-picker, .portfolio-page-selected-positions-actions-closing-target-profit-percent {
+    border-top: 1px dotted #575757;
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+.visible.portfolio-page-selected-positions-actions-strategy-picker, .visible.portfolio-page-selected-positions-actions-closing-target-profit-percent {
+    display: block;
+}
+.portfolio-page-selected-positions-actions-strategy-picker .input-label, .portfolio-page-selected-positions-actions-closing-target-profit-percent .input-label {
+    color: #999998;
+    display: inline-block;
+    padding-right: 10px;
+    text-align: right;
+    width: 150px;
+}
+.portfolio-page-selected-positions-actions-strategy-picker .number-selector-view, .portfolio-page-selected-positions-actions-closing-target-profit-percent .number-selector-view, .portfolio-page-selected-positions-actions-strategy-picker .select-strategy, .portfolio-page-selected-positions-actions-closing-target-profit-percent .select-strategy {
+    display: inline-block;
+    margin-bottom: 0;
+    width: 190px;
+}
+.portfolio-page-selected-positions-actions-strategy-picker .btn-save, .portfolio-page-selected-positions-actions-closing-target-profit-percent .btn-save {
+    margin-left: 150px;
+    width: 190px;
+}
+.portfolio-page-selected-positions-actions-instructions {
+    margin-bottom: 8px;
+}
+.portfolio-page-selected-positions-actions-instructions > .input-label {
+    margin-top: 10px;
+    vertical-align: top;
+}
+.portfolio-page-selected-positions-actions-instructions .number-selector-view, .portfolio-page-selected-positions-actions-instructions .select-strategy {
+    display: inline-block;
+    vertical-align: top;
+    width: 190px;
+}
+.portfolio-page-selected-positions-actions-instructions .number-selector-view > select, .portfolio-page-selected-positions-actions-instructions .number-selector-view > input, .portfolio-page-selected-positions-actions-instructions .select-strategy > select, .portfolio-page-selected-positions-actions-instructions .select-strategy > input {
+    margin: 0;
+    width: 100%;
+}
+.portfolio-page-table-empty {
+    margin-left: 35px;
+}
+
+.dynamic-lazy-table {
+    display: flex;
+    flex-flow: column nowrap;
+}
+.dynamic-lazy-table-container-wrapper {
+    -moz-box-flex: 2;
+    flex: 2 0 0px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+}
+.dynamic-lazy-table-container {
+    padding-bottom: 10px;
+}
+.dynamic-lazy-table-cell {
+    box-sizing: border-box;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    white-space: nowrap;
+}
+.dynamic-lazy-table-cell > * {
+    white-space: normal;
+}
+.dynamic-lazy-table-row {
+    white-space: nowrap;
+}
+
+.confirmation-order-legs-summary .order-leg-pill-view {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.order-leg-pill-view-property {
+    box-sizing: border-box;
+    display: inline-block;
+    font-size: 11px;
+    height: 19px;
+    line-height: 19px;
+    margin-right: 5px;
+    position: relative;
+    text-align: center;
+    vertical-align: top;
+}
+.order-leg-pill-view-property:last-of-type, .order-leg-pill-view-property:only-of-type {
+    margin-right: 0;
+}
+.order-leg-pill-view-property .order-leg-pill-view-sub-property {
+    white-space: nowrap;
+}
+.order-leg-pill-view-property:last-of-type .order-leg-pill-view-sub-property:last-of-type {
+    width: 16px;
+}
+.order-leg-pill-view-property.mini:last-of-type .order-leg-pill-view-sub-property:last-of-type {
+    width: 20px;
+}
+.order-leg-pill-view-property.mini {
+    font-size: 10px;
+    height: 17px;
+    line-height: 17px;
+}
+.order-leg-pill-view-property.mini > .order-leg-pill-view-sub-property {
+    padding: 0 3px;
+}
+.order-leg-pill-view-property.mini > .order-leg-pill-view-sub-property:first-of-type {
+    width: 40px;
+}
+.order-leg-pill-view-property.mini > .order-leg-pill-view-sub-property:last-of-type {
+    width: 23px;
+}
+.order-leg-pill-view-property.mini > .order-leg-pill-view-single-property {
+    height: 17px;
+    width: 36px;
+}
+.order-leg-pill-view-property.strike-pill.mini > .order-leg-pill-view-sub-property {
+    width: 30px;
+}
+.order-leg-pill-view-property.large {
+    font-size: 14px;
+    height: 24px;
+    line-height: 24px;
+}
+.order-leg-pill-view-property.large > .order-leg-pill-view-sub-property:first-of-type {
+    width: 49px;
+}
+.order-leg-pill-view-property.large > .order-leg-pill-view-sub-property:last-of-type {
+    width: 32px;
+}
+.order-leg-pill-view-property.large > .order-leg-pill-view-single-property {
+    height: 24px;
+    width: 93px;
+}
+.order-leg-pill-view-property.quantity {
+    color: #444;
+    text-align: right;
+    width: 20px;
+}
+.order-leg-pill-view-property.quantity.mini {
+    width: 19px;
+}
+.order-leg-pill-view-property.quantity.is-highlighted {
+    color: #da6d2e;
+    font-weight: bold;
+}
+.order-leg-pill-view-property.stock-info {
+    color: #444;
+    text-align: left;
+    width: 130px;
+}
+.order-leg-pill-view-property.stock-info.large {
+    width: 160px;
+}
+.order-leg-pill-view-property.action.abbreviate-action-text > .order-leg-pill-view-sub-property:first-of-type {
+    width: 16px;
+}
+.order-leg-pill-view-property.action.abbreviate-action-text > .order-leg-pill-view-sub-property:last-of-type {
+    width: 16px;
+}
+.order-leg-pill-view-property.action > .order-leg-pill-view-sub-property {
+    text-transform: uppercase;
+}
+.order-leg-pill-view-property.action > .order-leg-pill-view-sub-property:first-of-type {
+    color: white;
+    width: 32px;
+}
+.is-past-tense .order-leg-pill-view-property.action > .order-leg-pill-view-sub-property:first-of-type {
+    width: 46px;
+}
+.order-leg-pill-view-property.action > .order-leg-pill-view-sub-property:last-of-type {
+    background-color: transparent;
+    line-height: 17px;
+    text-align: center;
+    width: 34px;
+}
+.order-leg-pill-view-property.action.mini:not(.abbreviate-action-text) > .order-leg-pill-view-sub-property:first-of-type {
+    width: 22px;
+}
+.is-past-tense .order-leg-pill-view-property.action.mini:not(.abbreviate-action-text) > .order-leg-pill-view-sub-property:first-of-type {
+    width: 42px;
+}
+.order-leg-pill-view-property.action.mini:not(.abbreviate-action-text) > .order-leg-pill-view-sub-property:last-of-type {
+    width: 34px;
+}
+.order-leg-pill-view-property.action.mini > .order-leg-pill-view-sub-property:first-of-type {
+    width: 8px;
+}
+.order-leg-pill-view-property.action.mini > .order-leg-pill-view-sub-property:last-of-type {
+    line-height: 15px;
+    width: 18px;
+}
+.order-leg-pill-view-property.action.large:not(.abbreviate-action-text) > .order-leg-pill-view-sub-property:last-of-type {
+    width: 44px;
+}
+.order-leg-pill-view-property.action.large > .order-leg-pill-view-sub-property:last-of-type {
+    line-height: 22px;
+}
+.order-leg-pill-view-property.action > .order-leg-pill-view-sub-property:last-of-type {
+    border-left: 0 none;
+    border-style: solid solid solid none;
+    border-width: 1px 1px 1px 0;
+    color: #444;
+}
+.order-leg-pill-view-property.action.sell > .order-leg-pill-view-sub-property:first-of-type {
+    background-color: #932c08;
+}
+.order-leg-pill-view-property.action.sell > .order-leg-pill-view-sub-property:last-of-type {
+    border-color: #932c08;
+}
+.order-leg-pill-view-property.action.buy {
+}
+.order-leg-pill-view-property.action.buy > .order-leg-pill-view-sub-property:first-of-type {
+    background-color: #56990f;
+}
+.order-leg-pill-view-property.action.buy > .order-leg-pill-view-sub-property:last-of-type {
+    border-color: #56990f;
+}
+.order-leg-pill-view-property.action.is-editing-leg > .order-leg-pill-view-sub-property:first-of-type {
+    background-color: #9a972d;
+}
+.order-leg-pill-view-property.action.is-editing-leg > .order-leg-pill-view-sub-property:last-of-type {
+    border-color: #9a972d;
+}
+.order-leg-pill-view-property > .order-leg-pill-view-sub-property {
+    display: inline-block;
+    padding: 0 4px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+.order-leg-pill-view-property > .order-leg-pill-view-sub-property:first-of-type {
+    background-color: #afafaa;
+    border-radius: 5px 0 0 5px;
+    color: #fff;
+    font-family: "Avenir Next Medium",arial,helvetica,verdana,sans-serif;
+    text-transform: uppercase;
+    width: 40px;
+}
+.order-leg-pill-view-property > .order-leg-pill-view-sub-property:last-of-type {
+    background-color: #444;
+    border-radius: 0 5px 5px 0;
+    color: silver;
+    width: 25px;
+}
+.order-leg-pill-view-property > .order-leg-pill-view-single-property {
+    border: 1px solid #afafaa;
+    border-radius: 5px;
+    color: #afafaa;
+    display: inline-block;
+    font-family: "Avenir Next Medium",arial,helvetica,verdana,sans-serif;
+    text-transform: uppercase;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+ul.strategies {
+  box-sizing: border-box;
+  display: inline-block;
+  vertical-align: top;
+  list-style-type: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-right: 1px;
+  margin-bottom: 10px;
+  height: 100%;
+  width: 250px;
+  z-index: 3;
+}
+
+ul.strategies li {
+    box-sizing: border-box;
+    background-color: #f1f2ed;
+    border-top: 1px dotted #d9dad7;
+    cursor: pointer;
+    height: 40px;
+    padding: 4px 8px;
+    z-index: 4;
+}
+
+.strategies-panel{
+    background-color: #f1f2ed;
+    border-left: 0 none;
+    border-radius: 0 12px 12px 0;
+    box-shadow: 3px 1px 3px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+    height: 403px;
+    overflow: hidden;
+    top: 60px;
+    width: 565px;
+    z-index: 900;
+}
+
+.strategies-panel ul.strategies li.active {
+    background-color: #d9e1e0;
+}
+
+.strategies-panel dl.description {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 8px;
+    width: 110px;
+}
+
+.strategies-panel dl.description dt {
+    color: #626262;
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 13px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+.strategies-panel dl.description dd {
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+}
+.strategies-panel .short {
+    color: #932c08;
+}
+
+.strategies-panel .long {
+    color: #56990f;
+}
+
+.plays-container ul.strategies li.active {
+    background-color: #d9e1e0;
+}
+
+.plays-container dl.description {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 8px;
+    width: 110px;
+}
+.plays-container dl.description dt {
+    color: #626262;
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 13px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+.plays-container dl.description dd {
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 10px;
+}
+.plays-container .short {
+    color: #932c08;
+}
+
+.plays-container .long {
+    color: #56990f;
+}
+
+
+ul.plays {
+  list-style-type: none;
+  list-style: none;
+  margin-right: 1px;
+  margin-bottom: 10px;
+  height: 100%;
+  width: 170px;
+}
+
+
+ul.plays li {
+    border-bottom: 1px dotted #8dabbd;
+    color: #626262;
+    cursor: pointer;
+    font-family: "Avenir Next Demi",arial,helvetica,verdana,sans-serif;
+    font-size: 11px;
+    padding: 3px 8px;
+    position: relative;
 }

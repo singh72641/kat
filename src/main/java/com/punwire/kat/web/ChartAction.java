@@ -6,11 +6,18 @@ import com.punwire.kat.core.AppConfig;
 import com.punwire.kat.core.NumberUtil;
 import com.punwire.kat.data.Bar;
 import com.punwire.kat.trade.Trade;
+import com.punwire.kat.zerodha.ZdOptionChain;
+import com.punwire.kat.zerodha.ZdOptionList;
+
+import java.util.HashMap;
+import java.util.TreeMap;
 
 /**
  * Created by Kanwal on 13/02/16.
  */
 public class ChartAction {
+
+
     public static ObjectNode sendChart(Trade trade) {
 //        double currPrice1 = bar.getC();
 //        double stdVal1 = ((currPrice1 * vol.yearVol) * Math.sqrt(d.toDays()))/(Math.sqrt(365));
@@ -25,17 +32,25 @@ public class ChartAction {
         if( currPrice > 1000 ) incr = 1;
         if( currPrice > 5000 ) incr = 5;
 
+        ZdOptionList optoinList = AppConfig.store.get(trade.symbol);
+        double expectedMove = optoinList.getExpectedMove();
+
+
+
+//        double daysf = d.toDays() / 365.00;
+//        double expect1 = currPrice * (vol.yearVol ) * Math.sqrt( daysf );
+
         double maxStrike = trade.getMaxStrike();
         double minStrike = trade.getMinStrike();
 
         if( upperLimit > maxStrike )
         {
-            System.out.println("Upprt limit add: " + (20* incr));
-            upperLimit += 20* incr;
+            System.out.println("Upprt limit add: " + (15* incr));
+            upperLimit += 15* incr;
         }
         else {
-            System.out.println("Upprt limit add: " + (20* incr));
-            upperLimit = (maxStrike + 20*incr);
+            System.out.println("Upprt limit add: " + (15* incr));
+            upperLimit = (maxStrike + 15*incr);
         }
 
         System.out.println("CurrPrice: " + currPrice);
@@ -44,14 +59,36 @@ public class ChartAction {
         System.out.println("MaxStrike: " + maxStrike);
         System.out.println("Incr: " + incr);
 
+
+        double lowerBound = currPrice - expectedMove;
+        double uppperBound = currPrice + expectedMove;
         ArrayNode chartData = AppConfig.mapper.createArrayNode();
-        for( double pp = minStrike - (20.0*incr);pp< upperLimit; pp=pp+incr){
+        System.out.println("Expected Move: " + expectedMove);
+        System.out.println("Lower Bound: " + lowerBound);
+        System.out.println("Upper Bound: " + uppperBound);
+        ObjectNode chart = AppConfig.objectNode();
+        double maxValue=0.0;
+        double minValue=minStrike - (15.0*incr);
+        for( double pp = minValue;pp< upperLimit; pp=pp+incr){
             double pnl1 = trade.getPnLAtExpiry(pp);
+            maxValue = pp;
             ObjectNode chartNode = AppConfig.mapper.createObjectNode();
             if( currPrice >= pp && currPrice < pp + incr)
             {
                 chartNode.put("bullet","diamond");
                 System.out.println("Adding Bullet at " + pp);
+            }
+
+            if( lowerBound >= pp && lowerBound < pp + incr)
+            {
+                chart.put("guide1", pp);
+                System.out.println("Adding Bullet at " + lowerBound);
+            }
+
+            if( uppperBound >= pp && uppperBound < pp + incr)
+            {
+                chart.put("guide2", pp);
+                System.out.println("Adding Bullet at " + uppperBound);
             }
 
             chartNode.put("price",pp);
@@ -60,9 +97,41 @@ public class ChartAction {
             chartData.add(chartNode);
         }
 
+
+        chart.put("chartData",chartData);
+        chart.put("minValue",minValue);
+        chart.put("maxValue",maxValue);
         ObjectNode result = AppConfig.mapper.createObjectNode();
-        result.put("data", chartData);
+        result.put("data", chart);
         result.put("event", "chartdata");
+
+        System.out.println(result);
+
         return result;
     }
+
+    public static ObjectNode sendOiChart(String symbol, String expMonth) {
+
+        ZdOptionList optionList = AppConfig.store.get(symbol);
+        TreeMap<Double,ZdOptionChain> oc = optionList.get(expMonth);
+
+        ArrayNode chartData = AppConfig.mapper.createArrayNode();
+        for(Double strike: oc.keySet())
+        {
+            ZdOptionChain optionChain = oc.get(strike);
+            ObjectNode chartNode = AppConfig.mapper.createObjectNode();
+
+            chartNode.put("strike",strike);
+            chartNode.put("oi_call", NumberUtil.round(optionChain.call.getOpenInterest()/1000, 2));
+            chartNode.put("oi_put", NumberUtil.round(optionChain.put.getOpenInterest()/1000, 2));
+            chartNode.put("oic_call", NumberUtil.round(optionChain.call.getOiChange()/1000, 2));
+            chartNode.put("oic_put", NumberUtil.round(optionChain.put.getOiChange()/1000, 2));
+            chartData.add(chartNode);
+        }
+        ObjectNode result = AppConfig.mapper.createObjectNode();
+        result.put("data", chartData);
+        result.put("event", "oidata");
+        return result;
+    }
+
 }

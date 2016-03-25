@@ -4,22 +4,21 @@ import com.mongodb.*;
 import com.mongodb.bulk.*;
 import com.mongodb.client.*;
 import com.mongodb.client.model.*;
+import com.punwire.kat.core.AppConfig;
 import com.punwire.kat.core.DateUtil;
-import com.punwire.kat.zerodha.ZdHolding;
-import com.punwire.kat.zerodha.ZdOptionChain;
-import com.punwire.kat.zerodha.ZdSymbol;
-import com.punwire.kat.zerodha.ZdVolatility;
+import com.punwire.kat.core.NumberUtil;
+import com.punwire.kat.spark.TimeSeries;
+import com.punwire.kat.zerodha.*;
 import org.bson.BsonDocument;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.types.BasicBSONList;
+import org.bson.types.ObjectId;
 
 import javax.print.Doc;
 import java.text.DecimalFormat;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -32,7 +31,7 @@ import static com.mongodb.client.model.Sorts.descending;
 public class MongoDb {
 
     MongoClient mongoClient;
-    MongoDatabase database;
+    public MongoDatabase database;
 
     public MongoDb() {
         mongoClient = new MongoClient("localhost",27020);
@@ -249,6 +248,121 @@ public class MongoDb {
     }
 
 
+    public TimeSeries getTimeSeries(String symbol) {
+        MongoCollection col = database.getCollection("Eod");
+        Document doc = new Document("symbol", symbol);
+        Document sort = new Document("date", 1);
+        MongoCursor<Document> cursor = col.find(doc).sort(sort).iterator();
+        TimeSeries ts = new TimeSeries();
+        while (cursor.hasNext())
+        {
+            Document row = cursor.next();
+            //System.out.println(row.getString("symbol"));
+            Date d = row.getDate("date");
+            Instant instant = d.toInstant();
+            ts.add(instant,row.getDouble("open"), row.getDouble("high"),row.getDouble("low"), row.getDouble("close")
+                    ,row.getLong("tradedqty"),0L);
+        }
+        return ts;
+    }
+
+    public TimeSeries getTimeSeries(String symbol, LocalDate startDate) {
+        return getTimeSeries(symbol,startDate,10000000);
+    }
+
+    public void fix() {
+        MongoCollection col = database.getCollection("Eod");
+        MongoCursor<Document> cursor = col.find().iterator();
+        while (cursor.hasNext()) {
+            try {
+                Document row = cursor.next();
+                int tq = row.getInteger("tradedqty");
+                row.replace("tradedqty",Long.valueOf(tq));
+                ObjectId id = row.getObjectId("_id");
+                Document doc = new Document("_id", id);
+//                Document update = new Document("$set", new Document("tradedqty", Long.valueOf(tq) ));
+                col.replaceOne(doc, row);
+            } catch (Exception ex)
+            {
+                System.out.println("Already Long");
+            }
+        }
+    }
+
+    public void deleteEod(String symbol) {
+        MongoCollection col = database.getCollection("Eod");
+        Document doc = new Document("symbol", symbol);
+        col.deleteMany(doc);
+    }
+
+    public void fixMissing() {
+        MongoCollection col = database.getCollection("Eod");
+        Document doc = new Document("prev", new Document("$exists",false));
+        col.deleteMany(doc);
+
+        MongoCursor<Document> cursor = col.find(doc).iterator();
+        while (cursor.hasNext()) {
+            try {
+                Document row = cursor.next();
+                String symbol = row.getString("symbol");
+                Date d = row.getDate("date");
+                System.out.println(d.toString() + " " + symbol);
+//                int tq = row.getInteger("tradedqty");
+//                row.replace("tradedqty",Long.valueOf(tq));
+//                ObjectId id = row.getObjectId("_id");
+//                Document doc = new Document("_id", id);
+////                Document update = new Document("$set", new Document("tradedqty", Long.valueOf(tq) ));
+//                col.replaceOne(doc, row);
+            } catch (Exception ex)
+            {
+                System.out.println("Already Long");
+            }
+        }
+    }
+
+    public TimeSeries getTimeSeries(String symbol, LocalDate startDate, int limit) {
+        Long dd = startDate.atStartOfDay().toEpochSecond(ZoneOffset.ofHoursMinutes(5, 30));
+        java.util.Date d4 = new Date(dd*1000);
+        MongoCollection col = database.getCollection("Eod");
+        Document doc = new Document("symbol", symbol);
+        Document d1 = new Document("$gt", d4);
+        doc.append("date", d1);
+        Document sort = new Document("date", 1);
+        MongoCursor<Document> cursor = col.find(doc).sort(sort).limit(limit).iterator();
+        TimeSeries ts = new TimeSeries();
+        while (cursor.hasNext())
+        {
+            Document row = cursor.next();
+            //System.out.println(row.getString("symbol"));
+            Date d = row.getDate("date");
+            Instant instant = d.toInstant();
+            ts.add(instant,row.getDouble("open"), row.getDouble("high"),row.getDouble("low"), row.getDouble("close")
+                    ,row.getLong("tradedqty"),0L);
+        }
+        return ts;
+    }
+
+    public TimeSeries getFiiTS() {
+        MongoCollection col = database.getCollection("FiiData");
+        Document sort = new Document("date", 1);
+        MongoCursor<Document> cursor = col.find().sort(sort).iterator();
+        TimeSeries ts = new TimeSeries();
+        while (cursor.hasNext())
+        {
+            Document row = cursor.next();
+            //System.out.println(row.getString("symbol"));
+            LocalDate d =  DateUtil.toDate(row.getInteger("date"));
+            Instant instant = d.atStartOfDay().toInstant(ZoneOffset.MIN);
+            ts.addDouble("buyContracts", instant,row.getDouble("buyContracts"));
+            ts.addDouble("buyAmount", instant,row.getDouble("buyAmount"));
+            ts.addDouble("sellContracts", instant,row.getDouble("sellContracts"));
+            ts.addDouble("sellAmount", instant,row.getDouble("sellAmount"));
+            ts.addDouble("oiContracts", instant,row.getDouble("oiContracts"));
+            ts.addDouble("oiAmount", instant,row.getDouble("oiAmount"));
+        }
+        return ts;
+    }
+
     public List<ZdOptionChain> geteOptionChain(String underline) {
         Integer date = geteOptionLastDate(underline);
 
@@ -377,8 +491,23 @@ public class MongoDb {
         return oc;
     }
 
+    public void saveFiiData(LocalDate date, String type, double buyContracts,
+                            double buyAmount, double sellContracts, double sellAmount,
+                            double oiContracts , double oiAmount ) {
+        MongoCollection col = database.getCollection("FiiData");
+        Document d = new Document();
+        d.put("date", DateUtil.intDate(date));
+        d.put("type", type);
+        d.put("buyContracts", buyContracts);
+        d.put("buyAmount", buyAmount);
+        d.put("sellContracts", sellContracts);
+        d.put("sellAmount", sellAmount);
+        d.put("oiContracts", oiContracts);
+        d.put("oiAmount", oiAmount);
+        col.insertOne(d);
+    }
     public void saveOptionChain(ZdOptionChain oc) {
-        deleteOptionChain(oc.underline, oc.asOfDate, oc.strikePrice);
+        //deleteOptionChain(oc.underline, oc.asOfDate, oc.strikePrice);
         MongoCollection col = database.getCollection("OptionChain");
         Document d = new Document();
         d.put("symbol",oc.underline);
@@ -417,6 +546,67 @@ public class MongoDb {
 
     }
 
+    public void updateSplit(String symbol, LocalDate date, double factor){
+        MongoCollection col = database.getCollection("Eod");
+        Document doc = new Document("symbol", symbol);
+        Document d1 = new Document("$lte", convert(date));
+        doc.append("date", d1);
+        Document sort = new Document("date", -1);
+        MongoCursor<Document> cursor = col.find(doc).sort(sort).iterator();
+        boolean isFirst = true;
+        while (cursor.hasNext()) {
+            Document row = cursor.next();
+            ObjectId id = row.getObjectId("_id");
+            if(isFirst) {
+                row.replace("prev", NumberUtil.round(row.getDouble("prev")/factor,2));
+                isFirst = false;
+            }
+            else
+            {
+                row.replace("prev", NumberUtil.round(row.getDouble("prev")/factor,2));
+                row.replace("open", NumberUtil.round(row.getDouble("open")/factor,2));
+                row.replace("high", NumberUtil.round(row.getDouble("high")/factor,2));
+                row.replace("low", NumberUtil.round(row.getDouble("low")/factor,2));
+                row.replace("close", NumberUtil.round(row.getDouble("close")/factor,2));
+                row.replace("last", NumberUtil.round(row.getDouble("last")/factor,2));
+                row.replace("vwap", NumberUtil.round(row.getDouble("vwap")/factor,2));
+            }
+            col.replaceOne(new Document("_id",id),row);
+            System.out.println(row.getDate("date").toString() + "  " + row.getDouble("prev") + "  " + row.getDouble("open"));
+        }
+    }
+    public List<ZdSplit> findSplits()
+    {
+        List<ZdSplit> list = new ArrayList<>();
+        List<ZdSymbol> symbols = AppConfig.db.getSymbols();
+        MongoCollection col = database.getCollection("Eod");
+        for(ZdSymbol symbol:symbols) {
+            //System.out.println(symbol.symbol);
+            if( symbol.symbol.contains("NIFTY")) continue;
+            Document doc = new Document("symbol", symbol.symbol);
+            Document sort = new Document("date", 1);
+            MongoCursor<Document> cursor = col.find(doc).sort(sort).iterator();
+            while (cursor.hasNext())
+            {
+                Document row = cursor.next();
+                //System.out.println(row.getString("symbol"));
+                Date d = row.getDate("date");
+                //System.out.println(d.toString() + " " + symbol.symbol);
+                double open = row.getDouble("open");
+                double prevClose = row.getDouble("prev");
+                if( prevClose/open > 1.9 || prevClose/open < 0.45 )
+                {
+                    ZdSplit split = new ZdSplit(symbol.symbol,convert(d),prevClose/open);
+                    list.add(split);
+                    System.out.println("Found Split for " + symbol.symbol + " on " + d.toString() + " for " + (prevClose/open) + " open:" + open + " prevClose: " + prevClose);
+                }
+
+
+            }
+            cursor.close();
+        }
+        return list;
+    }
 
     public void saveOptionList(String type, String symbol) {
         MongoCollection col = database.getCollection("nfo");
@@ -491,7 +681,7 @@ public class MongoDb {
     }
 
     public void saveVolatility(String symbol, int date, double price, double prev, double prevVol, double currVol, double yearVol) {
-        deleteVolatility(symbol,date);
+        //deleteVolatility(symbol,date);
         MongoCollection col = database.getCollection("Volatility");
         Document d = new Document();
         d.put("symbol",symbol);
@@ -512,7 +702,23 @@ public class MongoDb {
         MongoCursor<Document> cursor = col.find(d).iterator();
 
         Document doc = cursor.next();
-        return new ZdSymbol(doc.getString("name"),doc.getString("symbol"), doc.getInteger("lot_size"));
+        return new ZdSymbol(doc.getString("name"),doc.getString("symbol"), doc.getInteger("lot_size"),"EQ");
+    }
+
+    public List<ZdSymbol> getSymbols() {
+        MongoCollection col = database.getCollection("Symbols");
+        Document d = new Document();
+
+        MongoCursor<Document> cursor = col.find(d).iterator();
+
+        List<ZdSymbol> symbols = new ArrayList<>();
+        while(cursor.hasNext())
+        {
+            Document doc = cursor.next();
+            ZdSymbol s = new ZdSymbol(doc.getString("name"),doc.getString("symbol"), doc.getInteger("lot_size"),doc.getString("type"));
+            symbols.add(s);
+        }
+        return symbols;
     }
 
 
@@ -588,7 +794,7 @@ public class MongoDb {
     }
 
     public void saveEod(String symbol, int date, double o, double h, double l, double c,  double last, double prev, long vol) {
-        removeEod(symbol,date);
+        //removeEod(symbol,date);
         MongoCollection col = database.getCollection("DailyBar");
         //System.out.println("Collection:  " + bar.getSymbol().toLowerCase().replace("-", "_"));
         Document d = new Document();
@@ -601,6 +807,30 @@ public class MongoDb {
         d.put("last",last);
         d.put("v",vol);
         d.put("prev",prev);
+        col.insertOne(d);
+    }
+
+    public void saveEod1(String symbol, String series, LocalDate date,double prev,double open ,double high ,double low ,double last,double close,
+                         double vwap ,long tradedqty,double turnover,long trades,long delqty ,double del_pct) {
+        //removeEod(symbol,date);
+        MongoCollection col = database.getCollection("Eod");
+        //System.out.println("Collection:  " + bar.getSymbol().toLowerCase().replace("-", "_"));
+        Document d = new Document();
+        d.put("symbol",symbol);
+        d.put("series",series);
+        d.put("date",convert(date));
+        d.put("prev",prev);
+        d.put("open",open);
+        d.put("high",high);
+        d.put("low",low);
+        d.put("last",last);
+        d.put("close",close);
+        d.put("vwap",vwap);
+        d.put("tradedqty",tradedqty);
+        d.put("turnover",turnover);
+        d.put("trades",trades);
+        d.put("delqty",delqty);
+        d.put("del_pct",del_pct);
         col.insertOne(d);
     }
 
@@ -661,6 +891,70 @@ public class MongoDb {
         c.drop();
     }
 
+    public void saveExpDates(String expMonth, int expDate) {
+        MongoCollection col = database.getCollection("ExpiryDates");
+        Document d = new Document();
+        d.put("exp_month",expMonth);
+        d.put("exp_date",expDate);
+        col.insertOne(d);
+    }
+
+    public TreeMap<String,LocalDate> getExpDates() {
+        MongoCollection col = database.getCollection("ExpiryDates");
+        TreeMap<String, LocalDate> dates = new TreeMap<>();
+        Document d = new Document();
+        d.put("exp_date",1);
+        MongoCursor<Document> cursor = col.find().sort(d).iterator();
+        try {
+            while(cursor.hasNext()) {
+                Document row = cursor.next();
+                LocalDate ddd = DateUtil.toDate( row.getInteger("exp_date") );
+                String key = ddd.format(NseLoader.yyMM);
+                dates.put(  key , ddd);
+            }
+        } finally {
+            cursor.close();
+        }
+        return dates;
+    }
+
+    public String getCurrExpMonth() {
+        MongoCollection col = database.getCollection("ExpiryDates");
+        TreeMap<String, LocalDate> dates = new TreeMap<>();
+        Document d = new Document();
+        d.put("exp_date",1);
+        MongoCursor<Document> cursor = col.find().sort(d).limit(1).iterator();
+        try {
+            if(cursor.hasNext()) {
+                Document row = cursor.next();
+                int eDate = row.getInteger("exp_date");
+                LocalDate localDate = DateUtil.toDate(eDate);
+                return localDate.format(NseLoader.ddMMMyyyy).toUpperCase();
+            }
+        } finally {
+            cursor.close();
+        }
+        return LocalDate.now().format(NseLoader.yyMMM);
+    }
+
+    public LocalDate getExpDates(String expMonth) {
+        MongoCollection col = database.getCollection("ExpiryDates");
+        TreeMap<String, LocalDate> dates = new TreeMap<>();
+        Document d = new Document();
+        d.put("exp_month",expMonth);
+        MongoCursor<Document> cursor = col.find().iterator();
+        try {
+            if(cursor.hasNext()) {
+                Document row = cursor.next();
+                LocalDate ddd = DateUtil.toDate( row.getInteger("exp_date") );
+                return ddd;
+            }
+        } finally {
+            cursor.close();
+        }
+        return LocalDate.now();
+    }
+
     public List<ZdHolding> getHolding(String type, String symbol) {
         MongoCollection col = database.getCollection("holdings");
         List<ZdHolding> holdings = new ArrayList<>();
@@ -679,6 +973,51 @@ public class MongoDb {
                                         row.getInteger("qty"),row.getDouble("avg_price"),row.getDouble("curr_price"),
                                         row.getDouble("currPnL"));
                 holdings.add(holding);
+            }
+        } finally {
+            cursor.close();
+        }
+        return holdings;
+    }
+
+    public List<ZdHolding> getHolding(String type) {
+        MongoCollection col = database.getCollection("holdings");
+        List<ZdHolding> holdings = new ArrayList<>();
+
+        Document d = new Document();
+        d.put("type",type);
+
+        Document sort = new Document("underline",1);
+
+        MongoCursor<Document> cursor = col.find(d).sort(sort).iterator();
+        try {
+            while(cursor.hasNext()) {
+                Document row = cursor.next();
+                ZdHolding holding = new ZdHolding(row.getString("symbol"),row.getString("underline"),row.getString("type"),
+                        row.getInteger("qty"),row.getDouble("avg_price"),row.getDouble("curr_price"),
+                        row.getDouble("currPnL"));
+                holdings.add(holding);
+            }
+        } finally {
+            cursor.close();
+        }
+        return holdings;
+    }
+
+
+    public List<String> getHoldingUnderlines(String type) {
+        MongoCollection col = database.getCollection("holdings");
+        List<String> holdings = new ArrayList<>();
+
+        Document d = new Document();
+        d.put("type",type);
+
+        Document sort = new Document("underline",1);
+        MongoCursor<String> cursor = col.distinct("underline",d,String.class).iterator();
+        try {
+            while(cursor.hasNext()) {
+                String row = cursor.next();
+                holdings.add(row);
             }
         } finally {
             cursor.close();
@@ -708,7 +1047,7 @@ public class MongoDb {
         InsertManyOptions io = new InsertManyOptions();
         io.ordered(false);
 
-        List<Document> ops = new ArrayList<>();
+        List<Document> ops = new ArrayList<Document>();
         for(Bar bar: bars)
         {
             ops.add(barToDoc(bar));
@@ -812,6 +1151,18 @@ public class MongoDb {
             cursor.close();
         }
         return set;
+    }
+
+    public static Date convert(LocalDate date)
+    {
+        Instant dd = date.atStartOfDay().toInstant(ZoneOffset.UTC);
+        return Date.from(dd);
+    }
+
+    public static LocalDate convert(Date date)
+    {
+        Instant i = date.toInstant();
+        return  LocalDateTime.ofInstant(i, ZoneId.of("UTC")).toLocalDate();
     }
 
     public DataItem getLastDataItem(String symbol, int interval)
